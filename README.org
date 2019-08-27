@@ -1,0 +1,38 @@
+* gmIdNeoKit
+Gm Id Kit with GUI to Work with Matlab Data file similar to Prof. Boris Murmann's gm/ID Starter Kit
+* Usage
+** Overall Description
+There are two parts in this Gm Id Kit : matlab part for data generation, and python gui for mos sizing and optimization
+** Matlab Data Generation
+The matlab data generation part is created based on Prof. Boris Murmann's gm/ID Starter Kit (https://web.stanford.edu/~murmann/gmid). Please read the README in Prof. Murmann's starter kit before you use the modified kit.
+There are several changes to make the MATLAB data generated work better with the GUI.
+1. More data saved in the configuration file such as 'GMOVERID' and 'FUG'
+2. Change of the matlab file formet to flatten the struct of mos transistors and store in proper version
+In order to work with the GUI, the name of the data saved by the spectre_run script should be in the following format : techCode_deviceName_cornerCode.mat
+1. techCode : code name for the technology
+2. deviceName : start with 'n' or 'p' to indicate the type of the mos transistors
+3. cornerCode : only the following five corner would be automated recognized 'tt', 'ff', 'ss', 'fs', and 'sf'
+4. '-' : symbol used to split the matlab file
+** Python GUI Usage
+Open a command line and type in 'python runGmIdSizing.py' and you will start the GUI
+*** Load the Data and Set the Gate Length
+ 1. Hit 'Sel' button and choose the folder of your folder
+ 2. Pick the desired .mat file and hit 'Set' button to set the device and corner
+ 3. Pick the desired gate length and reference gate length and hit 'L' & 'RefL'
+ 4. Hit 'Plot' to plot the curves
+*** Plot Readout
+ There are three tabs included to show plots that might help GmId design : Vstar, Id, GmId
+ The other two tabs (OptOp & OptW) would show the calculation results in the Opt Tab of Mos Transistor Sizing
+ - In those three tabs, automatic readout function is enabled so that you can move the mouse around in Fig1 while different information for the mos transistor information is listed at the corresponding operation point
+ - You can change the design corner and specify the curves plotted in the figure with the combobox and checkboxes on the top of the plots
+*** Mos Transistor Sizing
+ I included there different sizing methods : Syn, Cal, Opt
+**** Syn : Check the VGS for Certain GmOverId(Vstar) and GM
+**** Cal : Check the GmOverId and ID for certain VGS and Gate Width
+**** Opt : Optmize the MOS transistor across 'L' and "RefL"
+- OptVgs : calculate the VGS across different gate L with one of the three limitation
+- OptSize: calculate the Width of the transistor under the OptVgs limitation and one of the two extra limitation
+* Warning
+1. The Generation of the Curve may be slow.
+2. The code has only been tested with python 3.6.8 in macOs Mojave 10.14.6
+3. You would need PyQt5, pyqtgraph, h5py, scipy, numpy to run the GUI

@@ -29,6 +29,7 @@ def info(mosDat):
         print ('VGS : from %1.3f to %1.3f with step of %1.3f' % (minVgs, maxVgs, stepVgs))
         print ('VDS : from %1.3f to %1.3f with step of %1.3f' % (minVds, maxVds, stepVds))
         print ('VSB : from %1.3f to %1.3f with step of %1.3f' % (minVsb, maxVsb, stepVsb))
+        return maxVgs, stepVgs, minVsb
         #print ('Gate Length Set :', end = ' ')
 
 def lookup(mosDat, mosType, *outVars, **inVars):
@@ -235,13 +236,14 @@ def lookupfz(mosDat, mosTypeVar,*outVars, **inVars):
     vdsf = np.array(mosDat['VDS']).flatten()
     vgsf = np.array(mosDat['VGS']).flatten()
     lf = np.array(mosDat['L']).flatten()
-    # Interpolate for the input variables provided
-    if (mosType == 'nch'):
-        #points = ( -mosDat['VSB'][0], mosDat['VDS'][0], mosDat['VGS'][0], mosDat['L'][0])
-        points = ( -vsbf, vdsf, vgsf, lf)
-    else:
-        #points = ( mosDat['VSB'][0], -mosDat['VDS'][0], -mosDat['VGS'][0], mosDat['L'][0])
-        points = ( vsbf, -vdsf, -vgsf, lf)
+    points = ( -vsbf, vdsf, vgsf, lf)
+    ## Interpolate for the input variables provided
+    #if (mosType[0] == 'n'):
+    #    #points = ( -mosDat['VSB'][0], mosDat['VDS'][0], mosDat['VGS'][0], mosDat['L'][0])
+    #    points = ( -vsbf, vdsf, vgsf, lf)
+    #else:
+    #    #points = ( mosDat['VSB'][0], -mosDat['VDS'][0], -mosDat['VGS'][0], mosDat['L'][0])
+    #    points = ( -vsbf, -vdsf, -vgsf, lf)
 
     xi_mesh = np.array(np.meshgrid(VSB, VDS, VGS, L))
     xi = np.rollaxis(xi_mesh, 0, 5)
