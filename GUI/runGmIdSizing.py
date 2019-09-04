@@ -66,6 +66,11 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.checkBoxCornerFS.stateChanged.connect(self.PlotCornerFS)
         self.ui.checkBoxCornerSF.stateChanged.connect(self.PlotCornerSF)
         self.ui.checkBoxRef.stateChanged.connect(self.PlotRef)
+        ## checkBox for Syn Mos Setting
+        self.ui.checkBoxSynGmId.stateChanged.connect(self.SynGmId)
+        self.ui.checkBoxSynVstar.stateChanged.connect(self.SynVstar)
+        self.ui.checkBoxSynGm.stateChanged.connect(self.SynGm)
+        self.ui.checkBoxSynId.stateChanged.connect(self.SynId)
         ## checkBox for Opt Mos Setting
         self.ui.checkBoxOptVstar.stateChanged.connect(self.OptVstar)
         self.ui.checkBoxOptFt.stateChanged.connect(self.OptFt)
@@ -73,14 +78,16 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.checkBoxOptGm.stateChanged.connect(self.OptGm)
         #self.ui.checkBoxOptId.stateChanged.connect(self.optId)# No such function in GuiVp1
         self.ui.checkBoxOptArea.stateChanged.connect(self.OptArea)
+        ## checkBox for Ldes or Lref
+        self.ui.checkBoxChkLdes.stateChanged.connect(self.ChkLdes)
+        self.ui.checkBoxChkLref.stateChanged.connect(self.ChkLref)
         #pushButton.clicked.connect()
         self.ui.pushButtonMosDirSel.clicked.connect(self.DirSel)
         self.ui.pushButtonMosMatSet.clicked.connect(self.MosMatSet)
         self.ui.pushButtonGateLSet.clicked.connect(self.GateLSet)
         self.ui.pushButtonGateLRef.clicked.connect(self.GateLRef)
         self.ui.pushButtonPlot.clicked.connect(self.PlotUpdate)
-        self.ui.pushButtonSynGmId.clicked.connect(self.SynGmId)
-        self.ui.pushButtonSynVstar.clicked.connect(self.SynVstar)
+        self.ui.pushButtonSynMos.clicked.connect(self.SynMos)
         self.ui.pushButtonFuEst.clicked.connect(self.FuEst)
         #self.ui.pushButtonLChk.clicked.connect(self.LChkVstar)
         #self.ui.pushButtonExtCheck.clicked.connect(self.ExtCheck)#No such function in GuiVp1
@@ -224,6 +231,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         # MOS Transistor
         self.L = 0.18
         self.Lref = 0.18
+        self.Lchk = 0.18
         self.mosModel = 'nch'
         # MOS Transistor
         self.W = 10.0
@@ -239,6 +247,10 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.synGm = 5.0
         self.synId = 1.0
         self.synState = 1
+        ## synOppt : 0 for GmOverId, 1 for Vstar
+        self.synOppt = 1
+        ## synSize : 0 for Gm, 1 for Id
+        self.synSize = 0
         # Calculation MOS Transistor
         self.calW = 10.0
         self.calGmId = 5.0
@@ -425,8 +437,43 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         '''Initialize the GUI by setting the checkbox and so on'''
         self.ui.checkBoxOptVstar.setCheckState(2)
         self.ui.checkBoxOptGm.setCheckState(2)
+        self.ui.checkBoxSynVstar.setCheckState(2)
+        self.ui.checkBoxSynId.setCheckState(2)
 
     # checkBox Functions
+    def ChkLdes(self, state):
+        if state == Qt.Checked:
+            self.Lchk = self.L
+            self.ui.labelChkL.setText(self.sciPrint(0.000001*self.Lchk, 'm'))
+            self.ui.checkBoxChkLref.setCheckState(0)
+
+    def ChkLref(self, state):
+        if state == Qt.Checked:
+            self.Lchk = self.Lref
+            self.ui.labelChkL.setText(self.sciPrint(0.000001*self.Lchk, 'm'))
+            self.ui.checkBoxChkLdes.setCheckState(0)
+
+    def SynGmId(self, state):
+        ## synOppt : 0 for GmOverId, 1 for Vstar
+        if state == Qt.Checked:
+            self.synOppt = 0
+            self.ui.checkBoxSynVstar.setCheckState(0)
+
+    def SynVstar(self, state):
+        if state == Qt.Checked:
+            self.synOppt = 1
+            self.ui.checkBoxSynGmId.setCheckState(0)
+
+    def SynGm(self, state):
+        if state == Qt.Checked:
+            self.synSize = 0
+            self.ui.checkBoxSynId.setCheckState(0)
+
+    def SynId(self, state):
+        if state == Qt.Checked:
+            self.synSize = 1
+            self.ui.checkBoxSynGm.setCheckState(0)
+
     def PlotCornerTT(self, state):
         if self.avaCorner[0] == 1:
             if state == Qt.Checked:
@@ -588,9 +635,11 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         else:
             if(self.desLInd < self.refLInd):
                 self.listLChk = self.listL[self.desLInd:self.refLInd + 1]
+                self.ui.checkBoxChkLdes.setCheckState(2)
                 self.cornerMat()
             elif (self.desLInd > self.refLInd):
                 self.listLChk = self.listL[self.refLInd:self.desLInd + 1]
+                self.ui.checkBoxChkLdes.setCheckState(2)
                 self.cornerMat()
             else:
                 self.ui.labelLog.setText('Des and Ref should be different')
@@ -615,23 +664,16 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
             self.visibleAllRef(True)
             self.visibleAllRef(False)
 
-    def SynGmId(self):
-        self.synGmId = float(self.ui.lineEditSynGmId.text())
-        self.SynMos()
-
-    def SynVstar(self):
-        self.synGmId = 2/float(self.ui.lineEditSynVstar.text())
-        self.SynMos()
-
     def CalMos(self):
         self.UpdateBias()
         self.calVGS = float(self.ui.lineEditCalVgs.text())
         self.calW = float(self.ui.lineEditCalWidth.text())
-        self.calGmId = lp.lookupfz(self.mosDat, self.mosModel, 'GMOVERID', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.calVGS)
-        self.calId = lp.lookupfz(self.mosDat, self.mosModel, 'ID', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.calVGS) * self.calW / self.W
+        self.calGmId = lp.lookupfz(self.mosDat, self.mosModel, 'GMOVERID', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=self.calVGS)
+        self.calId = lp.lookupfz(self.mosDat, self.mosModel, 'ID', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=self.calVGS) * self.calW / self.W
         self.ui.labelCalGmId.setText(self.sciPrint(self.calGmId, 'S/A'))
         self.ui.labelCalVstar.setText(self.sciPrint((2.0/self.calGmId), 'V'))
-        self.ui.labelCalId.setText(self.sciPrint(self.calId, 'A'))
+        self.ui.labelChkId.setText(self.sciPrint(self.calId, 'A'))
+        self.ui.labelChkGm.setText(self.sciPrint(self.calId*self.calGmId, 'S'))
         self.ChkMos(self.calW, self.calVGS)
 
     def OptOpMos(self):
@@ -804,29 +846,40 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
     def SynMos(self):
         '''Syn MOS from Gm'''
         self.UpdateBias()
-        self.synGm = float(self.ui.lineEditSynGm.text()) * 0.001
-        self.synId = self.synGm / self.synGmId
-        self.synVGS, self.synState = self.SearchVGSG( self.tgtCorner, self.synGmId, self.L, 4)
-        self.synW =  lp.lookupfz(self.mosDat, self.mosModel, 'ID', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.synVGS) * self.W / self.synId
-        self.ui.labelSynW.setText(self.sciPrint(self.synW, 'um'))
-        self.ui.labelSynId.setText(self.sciPrint(self.synId, 'A'))
+        if self.synOppt == 0:
+            self.synGmId = float(self.ui.lineEditSynGmId.text())
+        else:
+            self.synGmId = 2000.0/float(self.ui.lineEditSynVstar.text())
+        if self.synSize == 0:
+            self.synGm = float(self.ui.lineEditSynGm.text()) * 0.000001
+            self.synId = self.synGm / self.synGmId
+        else:
+            self.synId = float(self.ui.lineEditSynId.text()) * 0.000001
+            self.synGm = self.synId * self.synGmId
+        self.synVGS, self.synState = self.SearchVGSG( self.tgtCorner, self.synGmId, self.Lchk, 4)
+        self.synW =  self.synId * self.W / lp.lookupfz(self.mosDat, self.mosModel, 'ID', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=self.synVGS)
+        self.ui.labelSynW.setText(self.sciPrint(0.000001 * self.synW, 'm'))
         self.ui.labelSynVgs.setText(self.sciPrint(self.synVGS, 'V'))
+        self.ui.labelChkId.setText(self.sciPrint(self.synId, 'A'))
+        self.ui.labelChkGm.setText(self.sciPrint(self.synGm, 'S/A'))
         self.ChkMos(self.synW, self.synVGS)
 
     def ChkMos(self, chkW, chkVgs):
         '''Scale the Char of MOS and Change the label'''
         mosScale = chkW / self.W
-        chkCgg = mosScale * lp.lookupfz(self.mosDat, self.mosModel, 'CGG', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=chkVgs)
+        chkCgg = mosScale * lp.lookupfz(self.mosDat, self.mosModel, 'CGG', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs)
         self.ui.labelChkCgg.setText(self.sciPrint(chkCgg, 'F'))
         #print ("Cgg : %1.24f" % chkCgg)
-        chkFt = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=chkVgs)
+        chkFt = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs)
         self.ui.labelChkFt.setText(self.sciPrint(chkFt, 'Hz'))
-        chkRout = 1.0 / ( mosScale * lp.lookupfz(self.mosDat, self.mosModel, 'GDS', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=chkVgs))
+        chkRout = 1.0 / ( mosScale * lp.lookupfz(self.mosDat, self.mosModel, 'GDS', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs))
         self.ui.labelChkRout.setText(self.sciPrint(chkRout, 'Ohm'))
-        chkAv = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=chkVgs)
+        chkAv = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs)
         self.ui.labelChkAv.setText(self.sciPrint(chkAv, 'V/V'))
-        chkVth = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'VT', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=chkVgs)
+        chkVth = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'VT', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs)
         self.ui.labelChkVth.setText(self.sciPrint(chkVth, 'V'))
+        chkVdsat = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'VDSAT', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs)
+        self.ui.labelChkVdsat.setText(self.sciPrint(chkVdsat, 'V'))
 
     def SearchVGSG(self, cornerIndex, tgtGmId, tgtL, absRel):
         vgsStart = 0
