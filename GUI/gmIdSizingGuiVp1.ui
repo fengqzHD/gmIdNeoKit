@@ -37,7 +37,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayoutMain" stretch="250,1,160">
+       <layout class="QHBoxLayout" name="horizontalLayoutMain" stretch="220,1,160">
         <item>
          <layout class="QVBoxLayout" name="verticalLayoutPlot" stretch="1,1,20,1,1,1,1">
           <item>
@@ -400,6 +400,118 @@ background-color:rgb(77,190,238);
                   </item>
                   <item>
                    <spacer name="horizontalSpacer_25">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>2</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tabVgs">
+             <attribute name="title">
+              <string>Vgs</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_11">
+              <item row="0" column="0">
+               <layout class="QVBoxLayout" name="verticalLayout_19" stretch="10,10">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetDefaultConstraint</enum>
+                </property>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_65" stretch="0,1,0,1,0">
+                  <item>
+                   <spacer name="horizontalSpacer_29">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>2</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="PlotWidget" name="topLPlotVgs"/>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_35">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>2</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="PlotWidget" name="topRPlotVgs"/>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_38">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>2</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_68" stretch="0,1,0,1,0">
+                  <item>
+                   <spacer name="horizontalSpacer_39">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>2</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="PlotWidget" name="botLPlotVgs"/>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_40">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>2</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="PlotWidget" name="botRPlotVgs"/>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_41">
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
                     </property>
@@ -970,11 +1082,11 @@ background-color:rgb(77,190,238);
          </spacer>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayoutFunc" stretch="15,32,2">
+         <layout class="QVBoxLayout" name="verticalLayoutFunc" stretch="16,34,2">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_22" stretch="1,1">
+           <layout class="QHBoxLayout" name="horizontalLayout_22" stretch="2,3">
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,8">
+             <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,7">
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3">
                 <item>
@@ -1057,9 +1169,9 @@ border: 15 px solid rgb(0, 0, 0);
              </layout>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_14" stretch="1,1,8">
+             <layout class="QVBoxLayout" name="verticalLayout_14" stretch="1,1,7">
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_34" stretch="0,0">
+               <layout class="QHBoxLayout" name="horizontalLayout_34" stretch="1,1,1">
                 <item>
                  <widget class="QPushButton" name="pushButtonGateLSet">
                   <property name="text">
@@ -1077,10 +1189,17 @@ border: 15 px solid rgb(0, 0, 0);
                   </property>
                  </widget>
                 </item>
+                <item>
+                 <widget class="QPushButton" name="pushButtonGateLChk">
+                  <property name="text">
+                   <string>Lchk</string>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_37" stretch="1,1">
+               <layout class="QHBoxLayout" name="horizontalLayout_37" stretch="1,1,1">
                 <item>
                  <widget class="QLabel" name="labelGateL">
                   <property name="styleSheet">
@@ -1098,7 +1217,20 @@ border: 15 px solid rgb(0, 0, 0);
                  <widget class="QLabel" name="labelGateLRef">
                   <property name="styleSheet">
                    <string notr="true">*{
-background-color:rgb(255, 255, 255);
+background-color:rgb(77,190,238);
+border: 15 px solid rgb(0, 0, 0);
+}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="labelGateLChk">
+                  <property name="styleSheet">
+                   <string notr="true">*{
+background-color:rgb(255, 0, 255);
 border: 15 px solid rgb(0, 0, 0);
 }</string>
                   </property>
@@ -1152,6 +1284,27 @@ border: 15 px solid rgb(0, 0, 0);
                   </item>
                  </layout>
                 </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_18">
+                  <item>
+                   <widget class="QLabel" name="labelLListChk">
+                    <property name="text">
+                     <string>Chk. L</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QListWidget" name="listWidgetLChk">
+                    <property name="styleSheet">
+                     <string notr="true"/>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
                </layout>
               </item>
              </layout>
@@ -1165,131 +1318,75 @@ border: 15 px solid rgb(0, 0, 0);
             </property>
             <layout class="QGridLayout" name="gridLayout_10">
              <item row="0" column="0">
-              <layout class="QVBoxLayout" name="verticalLayout_17" stretch="2,6,1,6">
+              <layout class="QVBoxLayout" name="verticalLayout_17" stretch="1,6,1,7">
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout_7" stretch="1,1">
+                <layout class="QHBoxLayout" name="horizontalLayout_39" stretch="1,1">
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_60" stretch="1,1">
+                  <layout class="QHBoxLayout" name="horizontalLayout_36" stretch="1,1">
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_54">
-                     <item>
-                      <widget class="QLabel" name="titleChkL">
-                       <property name="font">
-                        <font>
-                         <weight>75</weight>
-                         <bold>true</bold>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string>L =</string>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLabel" name="labelChkL">
-                       <property name="text">
-                        <string>130 nm</string>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignCenter</set>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
+                    <widget class="QLabel" name="titleBiasVds">
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Vds (mV):</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
                    </item>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_56">
-                     <item>
-                      <widget class="QCheckBox" name="checkBoxChkLdes">
-                       <property name="text">
-                        <string>Ldes</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QCheckBox" name="checkBoxChkLref">
-                       <property name="text">
-                        <string>Lref</string>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
+                    <widget class="QSpinBox" name="spinBoxBiasVds">
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                     <property name="maximum">
+                      <number>1800</number>
+                     </property>
+                     <property name="singleStep">
+                      <number>5</number>
+                     </property>
+                     <property name="value">
+                      <number>900</number>
+                     </property>
+                    </widget>
                    </item>
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_39" stretch="1,1">
+                  <layout class="QHBoxLayout" name="horizontalLayout_35" stretch="1,1">
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_36" stretch="1,1">
-                     <item>
-                      <widget class="QLabel" name="titleBiasVds">
-                       <property name="font">
-                        <font>
-                         <weight>75</weight>
-                         <bold>true</bold>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string>Vds (mV):</string>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QSpinBox" name="spinBoxBiasVds">
-                       <property name="alignment">
-                        <set>Qt::AlignCenter</set>
-                       </property>
-                       <property name="maximum">
-                        <number>1800</number>
-                       </property>
-                       <property name="singleStep">
-                        <number>5</number>
-                       </property>
-                       <property name="value">
-                        <number>900</number>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
+                    <widget class="QLabel" name="titleBiasVbs">
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Vbs (mV):</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
                    </item>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_35" stretch="1,1">
-                     <item>
-                      <widget class="QLabel" name="titleBiasVbs">
-                       <property name="font">
-                        <font>
-                         <weight>75</weight>
-                         <bold>true</bold>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string>Vbs (mV):</string>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QSpinBox" name="spinBoxBiasVbs">
-                       <property name="alignment">
-                        <set>Qt::AlignCenter</set>
-                       </property>
-                       <property name="maximum">
-                        <number>1800</number>
-                       </property>
-                       <property name="singleStep">
-                        <number>25</number>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
+                    <widget class="QSpinBox" name="spinBoxBiasVbs">
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                     <property name="maximum">
+                      <number>1800</number>
+                     </property>
+                     <property name="singleStep">
+                      <number>25</number>
+                     </property>
+                    </widget>
                    </item>
                   </layout>
                  </item>
@@ -1918,6 +2015,11 @@ background-color: rgb(0, 128,255);
                 <layout class="QHBoxLayout" name="horizontalLayout_28" stretch="1,1,1,1,1">
                  <item>
                   <widget class="QPushButton" name="pushButtonSynMos">
+                   <property name="styleSheet">
+                    <string notr="true">*{
+color: rgb(255,0, 255);
+}</string>
+                   </property>
                    <property name="text">
                     <string>Syn</string>
                    </property>
@@ -1925,6 +2027,11 @@ background-color: rgb(0, 128,255);
                  </item>
                  <item>
                   <widget class="QPushButton" name="pushButtonCal">
+                   <property name="styleSheet">
+                    <string notr="true">*{
+color: rgb(255,0, 255);
+}</string>
+                   </property>
                    <property name="text">
                     <string>Cal</string>
                    </property>

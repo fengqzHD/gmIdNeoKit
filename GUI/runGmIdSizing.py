@@ -78,14 +78,12 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.checkBoxOptGm.stateChanged.connect(self.OptGm)
         #self.ui.checkBoxOptId.stateChanged.connect(self.optId)# No such function in GuiVp1
         self.ui.checkBoxOptArea.stateChanged.connect(self.OptArea)
-        ## checkBox for Ldes or Lref
-        self.ui.checkBoxChkLdes.stateChanged.connect(self.ChkLdes)
-        self.ui.checkBoxChkLref.stateChanged.connect(self.ChkLref)
         #pushButton.clicked.connect()
         self.ui.pushButtonMosDirSel.clicked.connect(self.DirSel)
         self.ui.pushButtonMosMatSet.clicked.connect(self.MosMatSet)
         self.ui.pushButtonGateLSet.clicked.connect(self.GateLSet)
         self.ui.pushButtonGateLRef.clicked.connect(self.GateLRef)
+        self.ui.pushButtonGateLChk.clicked.connect(self.GateLChk)
         self.ui.pushButtonPlot.clicked.connect(self.PlotUpdate)
         self.ui.pushButtonSynMos.clicked.connect(self.SynMos)
         self.ui.pushButtonFuEst.clicked.connect(self.FuEst)
@@ -133,6 +131,24 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.botRPlotId.plotItem.setTitle('Fig.3 Ft*Gm/Id vs log(Id)')
         self.ui.botRPlotId.plotItem.setLabel('bottom', 'log(Id)')
         self.ui.botRPlotId.plotItem.setLabel('left','FtGm/Id', units = 'Hz/V')
+        # vgs as x axis
+        self.ui.topLPlotVgs.plotItem.showGrid(True, True, 0.7)
+        self.ui.topLPlotVgs.plotItem.setTitle('Fig.1 Id vs Vgs')
+        self.ui.topLPlotVgs.plotItem.setLabel('bottom', 'Vgs', units = 'V')
+        self.ui.topLPlotVgs.plotItem.setLabel('left','Id', units = 'A')
+        #self.ui.topLPlotVgs.plotItem.setLogMode(False, True)
+        self.ui.topRPlotVgs.plotItem.showGrid(True, True, 0.7)
+        self.ui.topRPlotVgs.plotItem.setTitle('Fig.2 Ft*Gm/Id vs Vgs')
+        self.ui.topRPlotVgs.plotItem.setLabel('bottom', 'Vgs', units = 'V')
+        self.ui.topRPlotVgs.plotItem.setLabel('left','Ft*Gm/Id', units = 'Hz/V')
+        self.ui.botLPlotVgs.plotItem.showGrid(True, True, 0.7)
+        self.ui.botLPlotVgs.plotItem.setLabel('bottom', 'Vgs', units = 'V')
+        self.ui.botLPlotVgs.plotItem.setTitle('Fig.3 Avo vs Vgs')
+        self.ui.botLPlotVgs.plotItem.setLabel('left','Avo', units = 'V/V')
+        self.ui.botRPlotVgs.plotItem.showGrid(True, True, 0.7)
+        self.ui.botRPlotVgs.plotItem.setLabel('bottom', 'Vgs', units = 'V')
+        self.ui.botRPlotVgs.plotItem.setTitle('Fig.4 Ft vs Vgs')
+        self.ui.botRPlotVgs.plotItem.setLabel('left','Ft', units = 'Hz')
         # gmId as x axis
         self.ui.topLPlotGmId.plotItem.showGrid(True, True, 0.7)
         self.ui.topLPlotGmId.plotItem.setTitle('Fig.1 Id vs Gm/Id')
@@ -156,12 +172,12 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.topLPlotL.plotItem.setLabel('bottom', 'L', units = 'nm')
         self.ui.topLPlotL.plotItem.setTitle('Fig.1 Vgs vs L')
         self.ui.topLPlotL.plotItem.setLabel('left','Vgs', units = 'V')
-        self.ui.topLPlotL.plotItem.addLegend()
+        #self.ui.topLPlotL.plotItem.addLegend()
         self.ui.topRPlotL.plotItem.showGrid(True, True, 0.7)
         self.ui.topRPlotL.plotItem.setTitle('Fig.2 Vstar vs L')
         self.ui.topRPlotL.plotItem.setLabel('bottom', 'L', units = 'nm')
         self.ui.topRPlotL.plotItem.setLabel('left', 'Vstar', units = 'V')
-        self.ui.topRPlotL.plotItem.addLegend()
+        #self.ui.topRPlotL.plotItem.addLegend()
         self.ui.botLPlotL.plotItem.showGrid(True, True, 0.7)
         self.ui.botLPlotL.plotItem.setTitle('Fig.3 Avo vs L')
         self.ui.botLPlotL.plotItem.setLabel('bottom', 'L', units = 'nm')
@@ -187,10 +203,15 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.botRPlotOpt.plotItem.setLabel('bottom', 'L', units = 'nm')
         self.ui.botRPlotOpt.plotItem.setTitle('Fig.4 Cdd vs L')
         self.ui.botRPlotOpt.plotItem.setLabel('left','Cdd', units = 'F')
-        # Pen & Line
+        # Pen & Line & Legend
+        self.legTLPlotL = pg.LegendItem()
+        self.legTLPlotL.setParentItem(self.ui.topLPlotL.plotItem.graphicsItem())
+        self.legTRPlotL = pg.LegendItem()
+        self.legTRPlotL.setParentItem(self.ui.topRPlotL.plotItem.graphicsItem())
         self.redLinePen = pg.mkPen('r', width=1.5, style=QtCore.Qt.DashLine)
         self.greenLinePen = pg.mkPen('g', width=1.5, style=QtCore.Qt.DashLine)
         self.blueLinePen = pg.mkPen('b', width=1.5, style=QtCore.Qt.DashLine)
+        self.magLinePen = pg.mkPen('m', width=1.5, style=QtCore.Qt.DashLine)
         self.dashPen = pg.mkPen('r', width=1.5, style=QtCore.Qt.DashLine)
         self.topLVLineVstar = pg.InfiniteLine(angle=90, pen = self.redLinePen, movable=False)
         self.topRVLineVstar = pg.InfiniteLine(angle=90, pen = self.redLinePen, movable=False)
@@ -204,6 +225,10 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.topRVLineGmId = pg.InfiniteLine(angle=90, pen = self.blueLinePen, movable=False)
         self.botLVLineGmId = pg.InfiniteLine(angle=90, pen = self.blueLinePen, movable=False)
         self.botRVLineGmId = pg.InfiniteLine(angle=90, pen = self.blueLinePen, movable=False)
+        self.topLVLineVgs = pg.InfiniteLine(angle=90, pen = self.magLinePen, movable=False)
+        self.topRVLineVgs = pg.InfiniteLine(angle=90, pen = self.magLinePen, movable=False)
+        self.botLVLineVgs = pg.InfiniteLine(angle=90, pen = self.magLinePen, movable=False)
+        self.botRVLineVgs = pg.InfiniteLine(angle=90, pen = self.magLinePen, movable=False)
         self.ui.topLPlotVstar.addItem(self.topLVLineVstar, ignoreBounds=True)
         self.ui.topRPlotVstar.addItem(self.topRVLineVstar, ignoreBounds=True)
         self.ui.botLPlotVstar.addItem(self.botLVLineVstar, ignoreBounds=True)
@@ -216,16 +241,14 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.topRPlotGmId.addItem(self.topRVLineGmId, ignoreBounds=True)
         self.ui.botLPlotGmId.addItem(self.botLVLineGmId, ignoreBounds=True)
         self.ui.botRPlotGmId.addItem(self.botRVLineGmId, ignoreBounds=True)
-        #self.ui.topLPlotGmId.addItem(self.topHLineGmId, ignoreBounds=True)
-        #self.arrowFt = pg.ArrowItem(angle=90, tipAngle=30, baseAngle=20, headLen=20, tailLen=None, pen={'color': 'w', 'width': 3})
-        #self.arrowAvo = pg.ArrowItem(angle=90, tipAngle=30, baseAngle=20, headLen=20, tailLen=None, pen={'color': 'w', 'width': 3})
-        #self.arrowFt.setPos(0,0)
-        #self.arrowAvo.setPos(0,0)
-        #self.ui.botRPlotVstar.addItem(self.arrowFt)
-        #self.ui.botLPlotVstar.addItem(self.arrowAvo)
+        self.ui.topLPlotVgs.addItem(self.topLVLineVgs, ignoreBounds=True)
+        self.ui.topRPlotVgs.addItem(self.topRVLineVgs, ignoreBounds=True)
+        self.ui.botLPlotVgs.addItem(self.botLVLineVgs, ignoreBounds=True)
+        self.ui.botRPlotVgs.addItem(self.botRVLineVgs, ignoreBounds=True)
         self.ui.topLPlotVstar.scene().sigMouseMoved.connect(self.topMouseMovedVstar)
         self.ui.topLPlotGmId.scene().sigMouseMoved.connect(self.topMouseMovedGmId)
         self.ui.topLPlotId.scene().sigMouseMoved.connect(self.topMouseMovedId)
+        self.ui.topLPlotVgs.scene().sigMouseMoved.connect(self.topMouseMovedVgs)
 
     def configDataLib(self):
         # MOS Transistor
@@ -323,6 +346,16 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.stepVGS = 0.01
         self.maxVSB = 0.6
         # Curve for des-L
+        ## Curve for Vgs Figure
+        self.pltCurveIdDDes = None
+        self.pltCurveFtDDes = None
+        self.pltCurveAvDDes = None
+        self.pltCurveFomDDes= None
+        self.pltCurveVdsatDDes= None
+        self.corCurveIdDDes = [None, None, None, None, None]
+        self.corCurveFtDDes = [None, None, None, None, None]
+        self.corCurveAvDDes = [None, None, None, None, None]
+        self.corCurveFomDDes= [None, None, None, None, None]
         ## Curve for Vstar Figure
         self.pltCurveIdVDes = None
         self.pltCurveFtVDes = None
@@ -357,6 +390,11 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.corCurveAvIDes = [None, None, None, None, None]
         self.corCurveFomIDes= [None, None, None, None, None]
         # Curve for Lref
+        ## Curve for Vgs Figure
+        self.corCurveIdDRef = [None, None, None, None, None]
+        self.corCurveFtDRef = [None, None, None, None, None]
+        self.corCurveAvDRef = [None, None, None, None, None]
+        self.corCurveFomDRef= [None, None, None, None, None]
         ## Curve for Vstar Figure Ref L
         self.corCurveIdVRef = [None, None, None, None, None]
         self.corCurveFtVRef = [None, None, None, None, None]
@@ -414,7 +452,6 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.refPen = pg.mkPen(color=(77,190,238), width = 2.5, style=QtCore.Qt.DotLine)
         self.symbolStyle = 'o'
         # Flag for State
-        self.arrowPos = 0
         self.curveReady = 0
         self.desLSet = 0
         self.desLInd = 0
@@ -441,18 +478,6 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.checkBoxSynId.setCheckState(2)
 
     # checkBox Functions
-    def ChkLdes(self, state):
-        if state == Qt.Checked:
-            self.Lchk = self.L
-            self.ui.labelChkL.setText(self.sciPrint(0.000001*self.Lchk, 'm'))
-            self.ui.checkBoxChkLref.setCheckState(0)
-
-    def ChkLref(self, state):
-        if state == Qt.Checked:
-            self.Lchk = self.Lref
-            self.ui.labelChkL.setText(self.sciPrint(0.000001*self.Lchk, 'm'))
-            self.ui.checkBoxChkLdes.setCheckState(0)
-
     def SynGmId(self, state):
         ## synOppt : 0 for GmOverId, 1 for Vstar
         if state == Qt.Checked:
@@ -627,6 +652,14 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
             self.refLInd, = np.where(self.listL == self.Lref)
             self.refLInd = self.refLInd[0]
 
+    def GateLChk(self):
+        self.gateLChkItem = self.ui.listWidgetLChk.currentItem()
+        if self.gateLChkItem == None:
+            self.ui.labelLog.setText('No Check Gate Length')
+        else:
+            self.Lchk = float(self.gateLChkItem.text())
+            self.ui.labelGateLChk.setText(self.gateLChkItem.text())
+
     def PlotUpdate(self):
         if self.desLSet == 0:
             self.ui.labelLog.setText('No Des Gate Length')
@@ -635,11 +668,9 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         else:
             if(self.desLInd < self.refLInd):
                 self.listLChk = self.listL[self.desLInd:self.refLInd + 1]
-                self.ui.checkBoxChkLdes.setCheckState(2)
                 self.cornerMat()
             elif (self.desLInd > self.refLInd):
                 self.listLChk = self.listL[self.refLInd:self.desLInd + 1]
-                self.ui.checkBoxChkLdes.setCheckState(2)
                 self.cornerMat()
             else:
                 self.ui.labelLog.setText('Des and Ref should be different')
@@ -695,6 +726,11 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.optPltVth = []
         self.optPltVdsat = []
         self.optPltVstar = []
+        if self.optOpptReady == 1:
+            self.legTLPlotL.removeItem('Vgs')
+            self.legTLPlotL.removeItem('Vth')
+            self.legTRPlotL.removeItem('Vstar')
+            self.legTRPlotL.removeItem('Vdsat')
         # GmOverId as Constriant
         if self.optOpptMode == 0:
             self.optOpGmId = 2000.0/float(self.ui.lineEditOptVstar.text())
@@ -744,9 +780,13 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
             self.curveOptVgs = pg.PlotDataItem( self.optPltL, self.optPltVgs, pen = self.pen, symbolBrush=(255,0,0), symbolPen='w', symbol = 'o', name = 'Vgs', clear=True)
             self.curveOptVth = pg.PlotDataItem( self.optPltL, self.optPltVth, pen = self.cornerPen[self.tgtCorner], symbolBrush=(255,0,255), symbolPen='w', symbol = 'p', name = 'Vth', clear=True)
             self.ui.topLPlotL.addItem(self.curveOptVgs)
+            self.legTLPlotL.addItem(self.curveOptVgs, 'Vgs')
             self.ui.topLPlotL.addItem(self.curveOptVth)
+            self.legTLPlotL.addItem(self.curveOptVth, 'Vth')
             self.ui.topRPlotL.addItem(self.curveOptVstar)
+            self.legTRPlotL.addItem(self.curveOptVstar, 'Vstar')
             self.ui.topRPlotL.addItem(self.curveOptVdsat)
+            self.legTRPlotL.addItem(self.curveOptVdsat, 'Vdsat')
             self.ui.botLPlotL.addItem(self.curveOptAvo)
             self.ui.botRPlotL.addItem(self.curveOptFt)
         else:
@@ -953,10 +993,12 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         print ("Loading complete!")
         self.ui.listWidgetL.clear()
         self.ui.listWidgetLRef.clear()
+        self.ui.listWidgetLChk.clear()
         self.listL = np.array(self.mosDat['L']).flatten()
         for i in range(len(self.listL)):
             self.ui.listWidgetL.addItem(str(self.listL[i]))
             self.ui.listWidgetLRef.addItem(str(self.listL[i]))
+            self.ui.listWidgetLChk.addItem(str(self.listL[i]))
         self.maxVGS, self.stepVGS, self.maxVSB = lp.info(self.mosDat)
         self.listVGS = np.arange(0, self.maxVGS, self.stepVGS)
         self.halfVGS = 0.5 * self.maxVGS
@@ -985,6 +1027,10 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.mosCorner[i] = None
         # Update Plots
         ## Clear the plots and then add back the indicator
+        self.ui.topLPlotVgs.clear()
+        self.ui.topRPlotVgs.clear()
+        self.ui.botLPlotVgs.clear()
+        self.ui.botRPlotVgs.clear()
         self.ui.topLPlotVstar.clear()
         self.ui.topRPlotVstar.clear()
         self.ui.botLPlotVstar.clear()
@@ -1006,6 +1052,10 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.botLPlotOpt.clear()
         self.ui.botRPlotOpt.clear()
         ## Add the VLine
+        self.ui.topLPlotVgs.addItem(self.topLVLineVgs, ignoreBounds=True)
+        self.ui.topRPlotVgs.addItem(self.topRVLineVgs, ignoreBounds=True)
+        self.ui.botLPlotVgs.addItem(self.botLVLineVgs, ignoreBounds=True)
+        self.ui.botRPlotVgs.addItem(self.botRVLineVgs, ignoreBounds=True)
         self.ui.topLPlotVstar.addItem(self.topLVLineVstar, ignoreBounds=True)
         self.ui.topRPlotVstar.addItem(self.topRVLineVstar, ignoreBounds=True)
         self.ui.botLPlotVstar.addItem(self.botLVLineVstar, ignoreBounds=True)
@@ -1083,6 +1133,16 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 # Curve for GmId at des-l and ref-l
                 self.gmIdCurve(i)
                 print ('GmIdCurve for Corner : ' + self.listCorner[i])
+                # Vgs
+                self.ui.topLPlotVgs.addItem(self.corCurveIdDDes[i])
+                self.ui.topRPlotVgs.addItem(self.corCurveFomDDes[i])
+                self.ui.botLPlotVgs.addItem(self.corCurveAvDDes[i])
+                self.ui.botRPlotVgs.addItem(self.corCurveFtDDes[i])
+                self.ui.topLPlotVgs.addItem(self.corCurveIdDRef[i])
+                self.ui.topRPlotVgs.addItem(self.corCurveFomDRef[i])
+                self.ui.botLPlotVgs.addItem(self.corCurveAvDRef[i])
+                self.ui.botRPlotVgs.addItem(self.corCurveFtDRef[i])
+                # Vstar
                 self.ui.topLPlotVstar.addItem(self.corCurveIdVDes[i])
                 self.ui.topRPlotVstar.addItem(self.corCurveFomVDes[i])
                 self.ui.botLPlotVstar.addItem(self.corCurveAvVDes[i])
@@ -1091,6 +1151,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.ui.topRPlotVstar.addItem(self.corCurveFomVRef[i])
                 self.ui.botLPlotVstar.addItem(self.corCurveAvVRef[i])
                 self.ui.botRPlotVstar.addItem(self.corCurveFtVRef[i])
+                # GmId
                 self.ui.topLPlotGmId.addItem(self.corCurveIdGDes[i])
                 self.ui.topRPlotGmId.addItem(self.corCurveFomGDes[i])
                 self.ui.botRPlotGmId.addItem(self.corCurveFtGDes[i])
@@ -1099,6 +1160,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.ui.topRPlotGmId.addItem(self.corCurveFomGRef[i])
                 self.ui.botRPlotGmId.addItem(self.corCurveFtGRef[i])
                 self.ui.botLPlotGmId.addItem(self.corCurveAvGRef[i])
+                # Id
                 self.ui.topLPlotId.addItem(self.corCurveGmIDes[i])
                 self.ui.topRPlotId.addItem(self.corCurveFomIDes[i])
                 self.ui.botLPlotId.addItem(self.corCurveAvIDes[i])
@@ -1140,6 +1202,10 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         # Update the MainCurve
         self.UpdateBias()
         if self.pltCurveIdVDes != None:
+            self.ui.topLPlotVgs.removeItem(self.pltCurveIdDDes)
+            self.ui.topRPlotVgs.removeItem(self.pltCurveFomDDes)
+            self.ui.botLPlotVgs.removeItem(self.pltCurveAvDDes)
+            self.ui.botRPlotVgs.removeItem(self.pltCurveFtDDes)
             self.ui.topLPlotVstar.removeItem(self.pltCurveIdVDes)
             self.ui.topRPlotVstar.removeItem(self.pltCurveFomVDes)
             self.ui.botLPlotVstar.removeItem(self.pltCurveAvVDes)
@@ -1184,6 +1250,15 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.csAvI = CubicSpline( self.listIdI, self.listAv)
         self.csVgI = CubicSpline( self.listIdI, self.listVGS)
         self.csVdsatI = CubicSpline( self.listIdI, self.listVdsat)
+        # Vgs Figure
+        self.pltCurveIdDDes = pg.PlotDataItem( self.listVGS, self.listId, pen = self.pen, clear=True)
+        self.pltCurveFtDDes = pg.PlotDataItem( self.listVGS, self.listFt, pen = self.pen, clear=True)
+        self.pltCurveAvDDes = pg.PlotDataItem( self.listVGS, self.listAv, pen = self.pen, clear=True)
+        self.pltCurveFomDDes= pg.PlotDataItem( self.listVGS, self.listFt * self.listGmId, pen = self.pen, clear=True)
+        self.ui.topLPlotVgs.addItem(self.pltCurveIdDDes)
+        self.ui.topRPlotVgs.addItem(self.pltCurveFomDDes)
+        self.ui.botLPlotVgs.addItem(self.pltCurveAvDDes)
+        self.ui.botRPlotVgs.addItem(self.pltCurveFtDDes)
         # Vstar Figure
         #self.pltVstar = np.arange( self.listVstar.min(), self.listVstar.max(), 0.001)
         self.pltVstar = np.arange( self.minVstar, self.maxVstar, 0.0005)
@@ -1288,6 +1363,11 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         listGmOverId = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'GMOVERID', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
         listFt = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
         listAv = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
+        ## Vgs Curve
+        self.corCurveIdDDes[cornerIndex] = pg.PlotDataItem( self.listVGS, listId, pen = self.cornerPen[cornerIndex], clear=True)
+        self.corCurveFtDDes[cornerIndex] = pg.PlotDataItem( self.listVGS, listFt, pen = self.cornerPen[cornerIndex], clear=True)
+        self.corCurveAvDDes[cornerIndex] = pg.PlotDataItem( self.listVGS, listAv, pen = self.cornerPen[cornerIndex], clear=True)
+        self.corCurveFomDDes[cornerIndex]= pg.PlotDataItem( self.listVGS, listFt * listGmOverId, pen = self.cornerPen[cornerIndex], clear=True)
         ## VstarCurve
         listVstar = 2*np.reciprocal(listGmOverId)
         csIdV = CubicSpline( listVstar, listId)
@@ -1336,6 +1416,11 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         listGmOverId = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'GMOVERID', VDS=self.VDS, VSB=self.VSB, L=self.Lref, VGS=self.listVGS)
         listFt = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=self.Lref, VGS=self.listVGS)
         listAv = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.Lref, VGS=self.listVGS)
+        ## Vgs Curve
+        self.corCurveIdDRef[cornerIndex] = pg.PlotDataItem( self.listVGS, listId, pen = self.refPen, clear=True)
+        self.corCurveFtDRef[cornerIndex] = pg.PlotDataItem( self.listVGS, listFt, pen = self.refPen, clear=True)
+        self.corCurveAvDRef[cornerIndex] = pg.PlotDataItem( self.listVGS, listAv, pen = self.refPen, clear=True)
+        self.corCurveFomDRef[cornerIndex]= pg.PlotDataItem( self.listVGS, listFt * listGmOverId, pen = self.refPen, clear=True)
         ## VstarCurve
         listVstar = 2*np.reciprocal(listGmOverId)
         csIdV = CubicSpline( listVstar, listId)
@@ -1435,6 +1520,35 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
             self.curveAvS0Corner[self.tgtCorner].setVisible(curveState)
             self.curveFtS0Corner[self.tgtCorner].setVisible(curveState)
 
+    def topMouseMovedVgs(self, evt):
+        mousePoint = self.ui.topLPlotVgs.plotItem.vb.mapSceneToView(evt)
+        self.topLVLineVgs.setPos(mousePoint.x())
+        self.topRVLineVgs.setPos(mousePoint.x())
+        self.botLVLineVgs.setPos(mousePoint.x())
+        self.botRVLineVgs.setPos(mousePoint.x())
+        if (self.curveReady == 1):
+            index = np.searchsorted( self.listVGS, mousePoint.x(), side="left")
+            if index > 0 and index < len(self.listVGS):
+                self.ui.labelId.setText(self.sciPrint(self.listId[index], 'A'))
+                self.ui.labelFt.setText(self.sciPrint(self.listFt[index], 'Hz'))
+                self.ui.labelVgs.setText(self.sciPrint(self.listVGS[index], 'V'))
+                self.ui.labelVdsat.setText(self.sciPrint(self.listVdsat[index], 'V'))
+                self.ui.labelGain.setText(self.sciPrint(self.listAv[index], 'V/V'))
+                self.ui.labelFOM.setText(self.sciPrint((self.listFt[index]*self.listGmId[index]),'Hz/V'))
+                # TODO Fix the Error
+                #self.ui.labelVstar.setText(self.sciPrint(2.0/self.listGmId, 'V'))
+                #self.ui.labelGmId.setText(self.sciPrint(self.listGmId, '1/V'))
+                self.ui.labelGmId.setText('---')
+                self.ui.labelVstar.setText('---')
+            else:
+                self.ui.labelId.setText('---')
+                self.ui.labelGmId.setText('---')
+                self.ui.labelFt.setText('---')
+                self.ui.labelVgs.setText('---')
+                self.ui.labelVdsat.setText('---')
+                self.ui.labelFOM.setText('---')
+                self.ui.labelVstar.setText('---')
+
     def topMouseMovedVstar(self, evt):
         '''Read out the number at the point'''
         mousePoint = self.ui.topLPlotVstar.plotItem.vb.mapSceneToView(evt)
@@ -1453,12 +1567,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.ui.labelVdsat.setText(self.sciPrint(self.pltVdsatV[index], 'V'))
                 self.ui.labelGain.setText(self.sciPrint(self.pltAvV[index], 'V/V'))
                 self.ui.labelFOM.setText(self.sciPrint((2.0*self.pltFtV[index]/self.pltVstar[index]),'Hz/V'))
-                self.arrowPos = index
             else:
-                if index <= 0 :
-                    self.arrowPos = 0
-                else:
-                    self.arrowPos = len(self.pltVstar) - 1
                 self.ui.labelId.setText('---')
                 self.ui.labelGmId.setText('---')
                 self.ui.labelFt.setText('---')
