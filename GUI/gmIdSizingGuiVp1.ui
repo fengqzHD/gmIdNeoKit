@@ -6,35 +6,56 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1069</width>
-    <height>929</height>
+    <width>1162</width>
+    <height>923</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Gm Id GUI</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,30">
+     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,28">
       <item>
-       <widget class="QLabel" name="titleToolBox">
-        <property name="font">
-         <font>
-          <family>Helvetica</family>
-          <pointsize>15</pointsize>
-          <weight>75</weight>
-          <italic>true</italic>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Gm Id Sizing Box V0.2</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="11,8">
+        <item>
+         <widget class="QLabel" name="titleToolBox">
+          <property name="font">
+           <font>
+            <family>Helvetica</family>
+            <pointsize>18</pointsize>
+            <weight>75</weight>
+            <italic>false</italic>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Gm Id Sizing Box V0.2</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelDevType">
+          <property name="font">
+           <font>
+            <pointsize>18</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayoutMain" stretch="220,1,160">
@@ -856,6 +877,11 @@ background-color:rgb(77,190,238);
               </item>
              </layout>
             </widget>
+            <widget class="QWidget" name="tab">
+             <attribute name="title">
+              <string>Page</string>
+             </attribute>
+            </widget>
            </widget>
           </item>
           <item>
@@ -1202,19 +1228,34 @@ border: 15 px solid rgb(0, 0, 0);
                <layout class="QHBoxLayout" name="horizontalLayout_37" stretch="1,1,1">
                 <item>
                  <widget class="QLabel" name="labelGateL">
+                  <property name="font">
+                   <font>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">*{
-background-color:rgb(255, 255, 255);
+background-color:rgb(153, 255, 255);
 border: 15 px solid rgb(0, 0, 0);
 }</string>
                   </property>
                   <property name="text">
                    <string/>
                   </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QLabel" name="labelGateLRef">
+                  <property name="font">
+                   <font>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">*{
 background-color:rgb(77,190,238);
@@ -1224,18 +1265,30 @@ border: 15 px solid rgb(0, 0, 0);
                   <property name="text">
                    <string/>
                   </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QLabel" name="labelGateLChk">
+                  <property name="font">
+                   <font>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">*{
-background-color:rgb(255, 0, 255);
+background-color:rgb(102, 102, 255);
 border: 15 px solid rgb(0, 0, 0);
 }</string>
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
@@ -2017,7 +2070,7 @@ background-color: rgb(0, 128,255);
                   <widget class="QPushButton" name="pushButtonSynMos">
                    <property name="styleSheet">
                     <string notr="true">*{
-color: rgb(255,0, 255);
+color: rgb(51,51, 255);
 }</string>
                    </property>
                    <property name="text">
@@ -2029,7 +2082,7 @@ color: rgb(255,0, 255);
                   <widget class="QPushButton" name="pushButtonCal">
                    <property name="styleSheet">
                     <string notr="true">*{
-color: rgb(255,0, 255);
+color: rgb(51,51, 255);
 }</string>
                    </property>
                    <property name="text">
@@ -2521,7 +2574,7 @@ border: 5 px solid rgb(0, 0, 0);
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1069</width>
+     <width>1162</width>
      <height>22</height>
     </rect>
    </property>

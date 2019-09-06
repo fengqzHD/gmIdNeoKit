@@ -11,24 +11,39 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_GmIdMainWindow(object):
     def setupUi(self, GmIdMainWindow):
         GmIdMainWindow.setObjectName("GmIdMainWindow")
-        GmIdMainWindow.resize(1069, 929)
+        GmIdMainWindow.resize(1162, 923)
         self.centralwidget = QtWidgets.QWidget(GmIdMainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.titleToolBox = QtWidgets.QLabel(self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Helvetica")
-        font.setPointSize(15)
+        font.setPointSize(18)
         font.setBold(True)
-        font.setItalic(True)
+        font.setItalic(False)
         font.setWeight(75)
         self.titleToolBox.setFont(font)
         self.titleToolBox.setAlignment(QtCore.Qt.AlignCenter)
         self.titleToolBox.setObjectName("titleToolBox")
-        self.verticalLayout_3.addWidget(self.titleToolBox)
+        self.horizontalLayout_6.addWidget(self.titleToolBox)
+        self.labelDevType = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        font.setBold(False)
+        font.setWeight(50)
+        self.labelDevType.setFont(font)
+        self.labelDevType.setText("")
+        self.labelDevType.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelDevType.setObjectName("labelDevType")
+        self.horizontalLayout_6.addWidget(self.labelDevType)
+        self.horizontalLayout_6.setStretch(0, 11)
+        self.horizontalLayout_6.setStretch(1, 8)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_6)
         self.horizontalLayoutMain = QtWidgets.QHBoxLayout()
         self.horizontalLayoutMain.setObjectName("horizontalLayoutMain")
         self.verticalLayoutPlot = QtWidgets.QVBoxLayout()
@@ -379,6 +394,9 @@ class Ui_GmIdMainWindow(object):
         self.verticalLayout_12.setStretch(1, 15)
         self.gridLayout_6.addLayout(self.verticalLayout_12, 0, 0, 1, 1)
         self.tabWidgetPlots.addTab(self.tabOpt, "")
+        self.tab = QtWidgets.QWidget()
+        self.tab.setObjectName("tab")
+        self.tabWidgetPlots.addTab(self.tab, "")
         self.verticalLayoutPlot.addWidget(self.tabWidgetPlots)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
@@ -593,27 +611,42 @@ class Ui_GmIdMainWindow(object):
         self.horizontalLayout_37 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_37.setObjectName("horizontalLayout_37")
         self.labelGateL = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.labelGateL.setFont(font)
         self.labelGateL.setStyleSheet("*{\n"
-"background-color:rgb(255, 255, 255);\n"
+"background-color:rgb(153, 255, 255);\n"
 "border: 15 px solid rgb(0, 0, 0);\n"
 "}")
         self.labelGateL.setText("")
+        self.labelGateL.setAlignment(QtCore.Qt.AlignCenter)
         self.labelGateL.setObjectName("labelGateL")
         self.horizontalLayout_37.addWidget(self.labelGateL)
         self.labelGateLRef = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.labelGateLRef.setFont(font)
         self.labelGateLRef.setStyleSheet("*{\n"
 "background-color:rgb(77,190,238);\n"
 "border: 15 px solid rgb(0, 0, 0);\n"
 "}")
         self.labelGateLRef.setText("")
+        self.labelGateLRef.setAlignment(QtCore.Qt.AlignCenter)
         self.labelGateLRef.setObjectName("labelGateLRef")
         self.horizontalLayout_37.addWidget(self.labelGateLRef)
         self.labelGateLChk = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.labelGateLChk.setFont(font)
         self.labelGateLChk.setStyleSheet("*{\n"
-"background-color:rgb(255, 0, 255);\n"
+"background-color:rgb(102, 102, 255);\n"
 "border: 15 px solid rgb(0, 0, 0);\n"
 "}")
         self.labelGateLChk.setText("")
+        self.labelGateLChk.setAlignment(QtCore.Qt.AlignCenter)
         self.labelGateLChk.setObjectName("labelGateLChk")
         self.horizontalLayout_37.addWidget(self.labelGateLChk)
         self.horizontalLayout_37.setStretch(0, 1)
@@ -1092,13 +1125,13 @@ class Ui_GmIdMainWindow(object):
         self.horizontalLayout_28.setObjectName("horizontalLayout_28")
         self.pushButtonSynMos = QtWidgets.QPushButton(self.groupBoxMosCheck)
         self.pushButtonSynMos.setStyleSheet("*{\n"
-"color: rgb(255,0, 255);\n"
+"color: rgb(51,51, 255);\n"
 "}")
         self.pushButtonSynMos.setObjectName("pushButtonSynMos")
         self.horizontalLayout_28.addWidget(self.pushButtonSynMos)
         self.pushButtonCal = QtWidgets.QPushButton(self.groupBoxMosCheck)
         self.pushButtonCal.setStyleSheet("*{\n"
-"color: rgb(255,0, 255);\n"
+"color: rgb(51,51, 255);\n"
 "}")
         self.pushButtonCal.setObjectName("pushButtonCal")
         self.horizontalLayout_28.addWidget(self.pushButtonCal)
@@ -1379,11 +1412,11 @@ class Ui_GmIdMainWindow(object):
         self.horizontalLayoutMain.setStretch(2, 160)
         self.verticalLayout_3.addLayout(self.horizontalLayoutMain)
         self.verticalLayout_3.setStretch(0, 1)
-        self.verticalLayout_3.setStretch(1, 30)
+        self.verticalLayout_3.setStretch(1, 28)
         self.gridLayout.addLayout(self.verticalLayout_3, 0, 0, 1, 1)
         GmIdMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(GmIdMainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1069, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1162, 22))
         self.menubar.setObjectName("menubar")
         GmIdMainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(GmIdMainWindow)
@@ -1397,7 +1430,7 @@ class Ui_GmIdMainWindow(object):
 
     def retranslateUi(self, GmIdMainWindow):
         _translate = QtCore.QCoreApplication.translate
-        GmIdMainWindow.setWindowTitle(_translate("GmIdMainWindow", "MainWindow"))
+        GmIdMainWindow.setWindowTitle(_translate("GmIdMainWindow", "Gm Id GUI"))
         self.titleToolBox.setText(_translate("GmIdMainWindow", "Gm Id Sizing Box V0.2"))
         self.titlePlotCorner.setText(_translate("GmIdMainWindow", "Des Corner :"))
         self.comboBoxDesignCorner.setItemText(0, _translate("GmIdMainWindow", "TT"))
@@ -1418,6 +1451,7 @@ class Ui_GmIdMainWindow(object):
         self.tabWidgetPlots.setTabText(self.tabWidgetPlots.indexOf(self.tabGmId), _translate("GmIdMainWindow", "GmId"))
         self.tabWidgetPlots.setTabText(self.tabWidgetPlots.indexOf(self.tabGateL), _translate("GmIdMainWindow", "OptOp"))
         self.tabWidgetPlots.setTabText(self.tabWidgetPlots.indexOf(self.tabOpt), _translate("GmIdMainWindow", "OptW"))
+        self.tabWidgetPlots.setTabText(self.tabWidgetPlots.indexOf(self.tab), _translate("GmIdMainWindow", "Page"))
         self.titleVstar.setText(_translate("GmIdMainWindow", "V* :"))
         self.labelVstar.setText(_translate("GmIdMainWindow", "0.2"))
         self.titleGmId.setText(_translate("GmIdMainWindow", "Gm / Id :"))

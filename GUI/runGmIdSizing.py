@@ -628,6 +628,21 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
             self.matFileInfo = self.matFileName.split('-')
             self.mosModel = self.matFileInfo[1]
             self.ui.titleMosCharData.setText(self.matFileName)
+            self.ui.labelDevType.setText(self.mosModel)
+            if (self.mosModel[0] == 'n'):
+                self.ui.labelDevType.setStyleSheet("*{\n"
+                                                   "background-color:rgb(102, 255, 102);\n"
+                                                    "}")
+                self.ui.titleToolBox.setStyleSheet("*{\n"
+                                                   "background-color:rgb(102, 255, 102);\n"
+                                                    "}")
+            else:
+                self.ui.labelDevType.setStyleSheet("*{\n"
+                                                   "background-color:rgb(255, 102, 255);\n"
+                                                    "}")
+                self.ui.titleToolBox.setStyleSheet("*{\n"
+                                                   "background-color:rgb(255, 102, 255);\n"
+                                                    "}")
             self.loadMat()
 
     def GateLSet(self):
@@ -1536,10 +1551,10 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.ui.labelGain.setText(self.sciPrint(self.listAv[index], 'V/V'))
                 self.ui.labelFOM.setText(self.sciPrint((self.listFt[index]*self.listGmId[index]),'Hz/V'))
                 # TODO Fix the Error
-                #self.ui.labelVstar.setText(self.sciPrint(2.0/self.listGmId, 'V'))
-                #self.ui.labelGmId.setText(self.sciPrint(self.listGmId, '1/V'))
-                self.ui.labelGmId.setText('---')
-                self.ui.labelVstar.setText('---')
+                self.ui.labelVstar.setText(self.sciPrint(2.0/self.listGmId[index], 'V'))
+                self.ui.labelGmId.setText(self.sciPrint(self.listGmId[index], '1/V'))
+                #self.ui.labelGmId.setText('---')
+                #self.ui.labelVstar.setText('---')
             else:
                 self.ui.labelId.setText('---')
                 self.ui.labelGmId.setText('---')
@@ -1548,6 +1563,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.ui.labelVdsat.setText('---')
                 self.ui.labelFOM.setText('---')
                 self.ui.labelVstar.setText('---')
+                self.ui.labelGain.setText('---')
 
     def topMouseMovedVstar(self, evt):
         '''Read out the number at the point'''
@@ -1575,6 +1591,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.ui.labelVdsat.setText('---')
                 self.ui.labelFOM.setText('---')
                 self.ui.labelVstar.setText('---')
+                self.ui.labelGain.setText('---')
 
     def topMouseMovedGmId(self, evt):
         '''Read out the number at the point'''
@@ -1602,6 +1619,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.ui.labelVdsat.setText('---')
                 self.ui.labelFOM.setText('---')
                 self.ui.labelVstar.setText('---')
+                self.ui.labelGain.setText('---')
 
     def topMouseMovedId(self, evt):
         '''Read out the number at the point'''
@@ -1629,6 +1647,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.ui.labelVdsat.setText('---')
                 self.ui.labelFOM.setText('---')
                 self.ui.labelVstar.setText('---')
+                self.ui.labelGain.setText('---')
 
     def sciPrint( self, rawNum, unit):
         '''Print the rawNum with autoscale'''
