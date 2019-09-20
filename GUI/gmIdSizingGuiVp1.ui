@@ -24,9 +24,9 @@
           <property name="font">
            <font>
             <family>Helvetica</family>
-            <pointsize>18</pointsize>
+            <pointsize>16</pointsize>
             <weight>75</weight>
-            <italic>false</italic>
+            <italic>true</italic>
             <bold>true</bold>
            </font>
           </property>
@@ -42,9 +42,10 @@
          <widget class="QLabel" name="labelDevType">
           <property name="font">
            <font>
-            <pointsize>18</pointsize>
-            <weight>50</weight>
-            <bold>false</bold>
+            <family>Helvetica</family>
+            <pointsize>16</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
            </font>
           </property>
           <property name="text">
@@ -877,12 +878,64 @@ background-color:rgb(77,190,238);
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="tab">
+            <widget class="QWidget" name="tabDev">
              <attribute name="title">
-              <string>Page</string>
+              <string>Dev</string>
              </attribute>
             </widget>
            </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_33" stretch="1,1">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_84" stretch="3,4">
+              <item>
+               <widget class="QLabel" name="titleVgs">
+                <property name="text">
+                 <string>Vgs :</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelVgs">
+                <property name="text">
+                 <string>0.75</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_89" stretch="3,4">
+              <item>
+               <widget class="QLabel" name="titleVdsat">
+                <property name="text">
+                 <string>Vdsat :</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelVdsat">
+                <property name="text">
+                 <string>0.25</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,1">
@@ -937,13 +990,13 @@ background-color:rgb(77,190,238);
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_75">
+           <layout class="QHBoxLayout" name="horizontalLayout_75" stretch="1,1">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_69" stretch="3,4">
+             <layout class="QHBoxLayout" name="horizontalLayout_74" stretch="3,4">
               <item>
-               <widget class="QLabel" name="titleId">
+               <widget class="QLabel" name="titleGain">
                 <property name="text">
-                 <string>Id* :</string>
+                 <string>Avo :</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -951,9 +1004,9 @@ background-color:rgb(77,190,238);
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="labelId">
+               <widget class="QLabel" name="labelGain">
                 <property name="text">
-                 <string>10</string>
+                 <string>50</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -1015,11 +1068,11 @@ background-color:rgb(77,190,238);
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_74" stretch="3,4">
+             <layout class="QHBoxLayout" name="horizontalLayout_69" stretch="3,4">
               <item>
-               <widget class="QLabel" name="titleGain">
+               <widget class="QLabel" name="titleId">
                 <property name="text">
-                 <string>Avo :</string>
+                 <string>Id* :</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1027,61 +1080,9 @@ background-color:rgb(77,190,238);
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="labelGain">
+               <widget class="QLabel" name="labelId">
                 <property name="text">
-                 <string>50</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_33" stretch="1,1">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_84" stretch="3,4">
-              <item>
-               <widget class="QLabel" name="titleVgs">
-                <property name="text">
-                 <string>Vgs :</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="labelVgs">
-                <property name="text">
-                 <string>0.75</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_89" stretch="3,4">
-              <item>
-               <widget class="QLabel" name="titleVdsat">
-                <property name="text">
-                 <string>Vdsat :</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="labelVdsat">
-                <property name="text">
-                 <string>0.25</string>
+                 <string>10</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -1108,7 +1109,7 @@ background-color:rgb(77,190,238);
          </spacer>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayoutFunc" stretch="16,34,2">
+         <layout class="QVBoxLayout" name="verticalLayoutFunc" stretch="18,32,2">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_22" stretch="2,3">
             <item>
@@ -1371,7 +1372,7 @@ border: 15 px solid rgb(0, 0, 0);
             </property>
             <layout class="QGridLayout" name="gridLayout_10">
              <item row="0" column="0">
-              <layout class="QVBoxLayout" name="verticalLayout_17" stretch="1,6,1,7">
+              <layout class="QVBoxLayout" name="verticalLayout_17" stretch="1,1,8,1,6">
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_39" stretch="1,1">
                  <item>
@@ -1446,6 +1447,82 @@ border: 15 px solid rgb(0, 0, 0);
                 </layout>
                </item>
                <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_43" stretch="1,1">
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_54" stretch="1,1">
+                   <item>
+                    <widget class="QLabel" name="titleMosMulti">
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Mult :</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="spinBoxMosMulti">
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                     <property name="maximum">
+                      <number>100</number>
+                     </property>
+                     <property name="singleStep">
+                      <number>1</number>
+                     </property>
+                     <property name="value">
+                      <number>10</number>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_56" stretch="1,1">
+                   <item>
+                    <widget class="QLabel" name="titleMosFinger">
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Finger :</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="spinBoxMosFinger">
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                     <property name="maximum">
+                      <number>50</number>
+                     </property>
+                     <property name="singleStep">
+                      <number>2</number>
+                     </property>
+                     <property name="value">
+                      <number>2</number>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+               <item>
                 <widget class="QTabWidget" name="tabWidgetMode">
                  <property name="currentIndex">
                   <number>0</number>
@@ -1456,7 +1533,7 @@ border: 15 px solid rgb(0, 0, 0);
                   </attribute>
                   <layout class="QGridLayout" name="gridLayout_7">
                    <item row="0" column="0">
-                    <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,1,1">
+                    <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,1,1,1">
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,1">
                        <item>
@@ -1604,7 +1681,7 @@ border: 15 px solid rgb(0, 0, 0);
                             </font>
                            </property>
                            <property name="text">
-                            <string>W :</string>
+                            <string>Wtot :</string>
                            </property>
                            <property name="alignment">
                             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1623,6 +1700,40 @@ border: 15 px solid rgb(0, 0, 0);
                          </item>
                         </layout>
                        </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_11">
+                         <item>
+                          <widget class="QLabel" name="titleSynWidthFin">
+                           <property name="font">
+                            <font>
+                             <weight>75</weight>
+                             <bold>true</bold>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Wfinger :</string>
+                           </property>
+                           <property name="alignment">
+                            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QLabel" name="labelSynWFin">
+                           <property name="text">
+                            <string>0.5 um</string>
+                           </property>
+                           <property name="alignment">
+                            <set>Qt::AlignCenter</set>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_79" stretch="1,1">
                        <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_76" stretch="1,1">
                          <item>
@@ -1650,6 +1761,23 @@ border: 15 px solid rgb(0, 0, 0);
                             <set>Qt::AlignCenter</set>
                            </property>
                           </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_85" stretch="0">
+                         <item>
+                          <spacer name="horizontalSpacer_2">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
                          </item>
                         </layout>
                        </item>
@@ -1729,7 +1857,7 @@ border: 15 px solid rgb(0, 0, 0);
                             </font>
                            </property>
                            <property name="text">
-                            <string>0.9</string>
+                            <string>900</string>
                            </property>
                            <property name="alignment">
                             <set>Qt::AlignCenter</set>

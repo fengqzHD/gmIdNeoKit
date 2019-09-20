@@ -229,6 +229,10 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.topRVLineVgs = pg.InfiniteLine(angle=90, pen = self.magLinePen, movable=False)
         self.botLVLineVgs = pg.InfiniteLine(angle=90, pen = self.magLinePen, movable=False)
         self.botRVLineVgs = pg.InfiniteLine(angle=90, pen = self.magLinePen, movable=False)
+        self.topLVLineL = pg.InfiniteLine(angle=90, pen = self.greenLinePen, movable=False)
+        self.topRVLineL = pg.InfiniteLine(angle=90, pen = self.greenLinePen, movable=False)
+        self.botLVLineL = pg.InfiniteLine(angle=90, pen = self.greenLinePen, movable=False)
+        self.botRVLineL = pg.InfiniteLine(angle=90, pen = self.greenLinePen, movable=False)
         self.ui.topLPlotVstar.addItem(self.topLVLineVstar, ignoreBounds=True)
         self.ui.topRPlotVstar.addItem(self.topRVLineVstar, ignoreBounds=True)
         self.ui.botLPlotVstar.addItem(self.botLVLineVstar, ignoreBounds=True)
@@ -245,10 +249,15 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.topRPlotVgs.addItem(self.topRVLineVgs, ignoreBounds=True)
         self.ui.botLPlotVgs.addItem(self.botLVLineVgs, ignoreBounds=True)
         self.ui.botRPlotVgs.addItem(self.botRVLineVgs, ignoreBounds=True)
+        self.ui.topLPlotL.addItem(self.topLVLineL, ignoreBounds=True)
+        self.ui.topRPlotL.addItem(self.topRVLineL, ignoreBounds=True)
+        self.ui.botLPlotL.addItem(self.botLVLineL, ignoreBounds=True)
+        self.ui.botRPlotL.addItem(self.botRVLineL, ignoreBounds=True)
         self.ui.topLPlotVstar.scene().sigMouseMoved.connect(self.topMouseMovedVstar)
         self.ui.topLPlotGmId.scene().sigMouseMoved.connect(self.topMouseMovedGmId)
         self.ui.topLPlotId.scene().sigMouseMoved.connect(self.topMouseMovedId)
         self.ui.topLPlotVgs.scene().sigMouseMoved.connect(self.topMouseMovedVgs)
+        self.ui.topLPlotL.scene().sigMouseMoved.connect(self.topMouseMovedL)
 
     def configDataLib(self):
         # MOS Transistor
@@ -265,11 +274,14 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.VSB = 0.1
         # Syn MOS Transistor
         self.synW = 10.0
+        self.synWFin = 0.5
         self.synVGS = 0.9
         self.synGmId = 5.0
         self.synGm = 5.0
         self.synId = 1.0
         self.synState = 1
+        self.synMulti = 10
+        self.synFin = 2
         ## synOppt : 0 for GmOverId, 1 for Vstar
         self.synOppt = 1
         ## synSize : 0 for Gm, 1 for Id
@@ -712,7 +724,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
 
     def CalMos(self):
         self.UpdateBias()
-        self.calVGS = float(self.ui.lineEditCalVgs.text())
+        self.calVGS = float(self.ui.lineEditCalVgs.text())*0.001
         self.calW = float(self.ui.lineEditCalWidth.text())
         self.calGmId = lp.lookupfz(self.mosDat, self.mosModel, 'GMOVERID', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=self.calVGS)
         self.calId = lp.lookupfz(self.mosDat, self.mosModel, 'ID', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=self.calVGS) * self.calW / self.W
@@ -733,6 +745,10 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.topRPlotL.clear()
         self.ui.botLPlotL.clear()
         self.ui.botRPlotL.clear()
+        self.ui.topLPlotL.addItem(self.topLVLineL, ignoreBounds=True)
+        self.ui.topRPlotL.addItem(self.topRVLineL, ignoreBounds=True)
+        self.ui.botLPlotL.addItem(self.botLVLineL, ignoreBounds=True)
+        self.ui.botRPlotL.addItem(self.botRVLineL, ignoreBounds=True)
         self.optPltL = []
         self.optPltFt = []
         self.optPltAvo = []
@@ -901,6 +917,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
     def SynMos(self):
         '''Syn MOS from Gm'''
         self.UpdateBias()
+        self.synMulti = int(self.ui.spinBoxMosMulti.value())
+        self.synFin = int(self.ui.spinBoxMosFinger.value())
         if self.synOppt == 0:
             self.synGmId = float(self.ui.lineEditSynGmId.text())
         else:
@@ -913,7 +931,9 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
             self.synGm = self.synId * self.synGmId
         self.synVGS, self.synState = self.SearchVGSG( self.tgtCorner, self.synGmId, self.Lchk, 4)
         self.synW =  self.synId * self.W / lp.lookupfz(self.mosDat, self.mosModel, 'ID', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=self.synVGS)
+        self.synWFin = self.synW / (self.synMulti * self.synFin)
         self.ui.labelSynW.setText(self.sciPrint(0.000001 * self.synW, 'm'))
+        self.ui.labelSynWFin.setText(self.sciPrint(0.000001 * self.synWFin, 'm'))
         self.ui.labelSynVgs.setText(self.sciPrint(self.synVGS, 'V'))
         self.ui.labelChkId.setText(self.sciPrint(self.synId, 'A'))
         self.ui.labelChkGm.setText(self.sciPrint(self.synGm, 'S/A'))
@@ -1083,6 +1103,10 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.topRPlotId.addItem(self.topRVLineId, ignoreBounds=True)
         self.ui.botLPlotId.addItem(self.botLVLineId, ignoreBounds=True)
         self.ui.botRPlotId.addItem(self.botRVLineId, ignoreBounds=True)
+        self.ui.topLPlotL.addItem(self.topLVLineL, ignoreBounds=True)
+        self.ui.topRPlotL.addItem(self.topRVLineL, ignoreBounds=True)
+        self.ui.botLPlotL.addItem(self.botLVLineL, ignoreBounds=True)
+        self.ui.botRPlotL.addItem(self.botRVLineL, ignoreBounds=True)
         # Generate Curve
         self.genCurve()
         self.ui.comboBoxDesignCorner.setCurrentIndex(self.tgtCorner)
@@ -1648,6 +1672,25 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.ui.labelFOM.setText('---')
                 self.ui.labelVstar.setText('---')
                 self.ui.labelGain.setText('---')
+
+    def topMouseMovedL(self, evt):
+        '''Read out the number at the point'''
+        mousePointI = self.ui.topLPlotL.plotItem.vb.mapSceneToView(evt)
+        if (self.optOpptReady == 1):
+            index = np.searchsorted( self.optPltL, mousePointI.x(), side="left")
+            if index >= 0 and index < len(self.optPltL):
+                self.topLVLineL.setPos(self.optPltL[index])
+                self.topRVLineL.setPos(self.optPltL[index])
+                self.botLVLineL.setPos(self.optPltL[index])
+                self.botRVLineL.setPos(self.optPltL[index])
+                self.ui.labelId.setText('---')
+                self.ui.labelGmId.setText(self.sciPrint((2.0/self.optPltVstar[index]), '1/V'))
+                self.ui.labelFt.setText(self.sciPrint(self.optPltFt[index], 'Hz'))
+                self.ui.labelVgs.setText(self.sciPrint(self.optPltVgs[index], 'V'))
+                self.ui.labelVdsat.setText(self.sciPrint(self.optPltVdsat[index], 'V'))
+                self.ui.labelVstar.setText(self.sciPrint( self.optPltVstar[index], 'V'))
+                self.ui.labelFOM.setText('---')
+                self.ui.labelGain.setText(self.sciPrint(self.optPltAvo[index], 'V/V'))
 
     def sciPrint( self, rawNum, unit):
         '''Print the rawNum with autoscale'''
