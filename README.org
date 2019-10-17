@@ -18,28 +18,47 @@ In order to work with the GUI, the name of the data saved by the spectre_run scr
 ** Python GUI Usage
 Open a command line and type in 'python runGmIdSizing.py' and you will start the GUI
 *** Load the Data and Set the Gate Length
- 1. Hit 'Sel' button and choose the folder of your folder
+ 1. Hit 'Sel' button and choose the folder with the mat files
  2. Pick the desired .mat file and hit 'Set' button to set the device and corner
- 3. Pick the desired gate length and reference gate length and hit 'L' & 'RefL'
- 4. Hit 'Plot' to plot the curves
+ 3. Pick 'Ldes' - desired gate length for plot & data readout, 'Lref' - the reference gate length for plot, and 'Lchk' - the gate length for the mos transitor checking
+    - 'Lref' and 'Ldes' also set the range for the gate length in the 'Opt' function
+ 4. Hit 'Ldes' & 'Lref' & 'Lchk' to finish the setting of the corresponding gate length
+ 5. Hit 'Plot' to plot the curves
+    - Only 'Lref' and 'Ldes' are needed for plotting
 *** Plot Readout
  There are four tabs included to show plots that might help GmId design : Vstar, Id, Vgs, GmId
  The other two tabs (OptOp & OptW) would show the calculation results in the Opt Tab of Mos Transistor Sizing
  - In those three tabs, automatic readout function is enabled so that you can move the mouse around in Fig1 while different information for the mos transistor information is listed at the corresponding operation point
- - You can change the design corner and specify the curves plotted in the figure with the combobox and checkboxes on the top of the plots
+ - You can change the design corner with the 'Des Corner' combobox if the data sets for different corners are stored in the folder 
+ - You can use checkboxes on the top of the plots to change of the visibilities of the responding curves
 *** Mos Transistor Checking
 I included there different sizing methods : Syn, Cal, Opt.
 In order to use the Syn & Cal function, you need to set the gate length for checking mos operation point by pick the desired gate length and hit 'Lchk'.
 Further, you could set the bias of the transistor by editing the 'Vds' and 'Vbs'.
 Specially for mos sizing, you could specify the multiplier and number of fingers by changing 'Mult' and 'Finger' so that the width of finger is calculated besides the total width of the transistor.
+$W_{tot}=m\times nf \times W_{finger}$
 **** Syn : Check the VGS for Certain GmOverId(Vstar) and Calculate the Width of the Transistor for the Specific GM/Id
 **** Cal : Check the GmOverId and ID for certain VGS and Gate Width
-**** Opt : Optmize the MOS transistor across 'L' and "RefL"
-***** Functions
-- Oppt : Calculate the VGS across different gate L with one of the three limitations of Vstar, Ft, and SelfGain.
-- Size : Calculate the Width of the transistor under the OptVgs limitation and one of the two extra limitation
-- optimization results are plotted in the two tabs on the left side of the GUI with Oppt results in the 'OptOp' tab and Size results in the 'OptW' tab.
+**** Opt : Optmize the MOS transistor across 'Ldes' and 'Lref'
+***** Oppt
+- Calculate the VGS across different gate L with one of the three limitations of Vstar, Ft, and SelfGain(Av)
+- Set the desired limitation by hitting one of the three green checkboxes
+- Optimization results are plotted in the 'OptOp' tab on the left side of the GUI 
+***** Size
+- Size : Calculate the Width of the transistor under the OptVgs limitation and one of the two limitations of Gm or Area with the VGS as calculated earlier in 'Oppt'
+- Set the desired limitation by hitting one of the three green checkboxes
+- Optimization results are plotted in the 'OptW' tab on the left side of the GUI
 * Warning
 1. The Generation of the Curve may be slow especially for the optimization function
 2. The code has only been tested with python 3.6.8 in macOs Mojave 10.14.6
 3. You would need PyQt5, pyqtgraph, h5py, scipy, numpy to run the GUI
+* Limitations
+** Accuracy Limitation
+1. Assumption : $I_{D} \propto W$
+   - Clearly this assumption would not hold if the calculated gate width is far from the gate width used to extract the data
+2. Interpolation Error
+   - The interpolation in the GUI is implemented with interpn & CubisSpline from scipy.interpolate.
+   - As long as the intial step in the simulation for the matlab data generation are fine enough, the average error from the interpolation should be around 1%.
+** Noise
+1. Flicker noise corner frequency $f_c$ is not included
+2. Noise parameters $V_n$ and $I_n$ are not calculated and updated based on the actual sizing of the MOS transistor
