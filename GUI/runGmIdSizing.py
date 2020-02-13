@@ -1023,7 +1023,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
 
     def loadMat(self):
         '''Load the MAT File and Set the Voltage as Bias'''
-        print ('Load Mat File')
+        print ('Load Mat File : %s' % self.matItem.text())
         self.mosDat = h5py.File(self.matFilePath, 'r')
         print ("Loading complete!")
         self.ui.listWidgetL.clear()
@@ -1504,6 +1504,10 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
     def visibleRef(self, curveState):
         ''' TurnOff the Ref Curve'''
         if(self.refLSet == 1):
+            self.corCurveIdDRef[self.tgtCorner].setVisible(curveState)
+            self.corCurveFtDRef[self.tgtCorner].setVisible(curveState)
+            self.corCurveAvDRef[self.tgtCorner].setVisible(curveState)
+            self.corCurveFomDRef[self.tgtCorner].setVisible(curveState)
             self.corCurveIdVRef[self.tgtCorner].setVisible(curveState)
             self.corCurveFtVRef[self.tgtCorner].setVisible(curveState)
             self.corCurveAvVRef[self.tgtCorner].setVisible(curveState)
@@ -1523,6 +1527,10 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
             # Ref Curve is Generated
             for i in range(len(self.listCorner)):
                 if self.avaCorner[i] == 1:
+                    self.corCurveIdDRef[i].setVisible(curveState)
+                    self.corCurveFtDRef[i].setVisible(curveState)
+                    self.corCurveAvDRef[i].setVisible(curveState)
+                    self.corCurveFomDRef[i].setVisible(curveState)
                     self.corCurveIdVRef[i].setVisible(curveState)
                     self.corCurveFtVRef[i].setVisible(curveState)
                     self.corCurveAvVRef[i].setVisible(curveState)
