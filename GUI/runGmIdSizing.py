@@ -78,6 +78,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.checkBoxOptGm.stateChanged.connect(self.OptGm)
         #self.ui.checkBoxOptId.stateChanged.connect(self.optId)# No such function in GuiVp1
         self.ui.checkBoxOptArea.stateChanged.connect(self.OptArea)
+        ## checkBox for Gate Length Extension
+        self.ui.checkBoxGateLExt.stateChanged.connect(self.GateLExtEn)
         #pushButton.clicked.connect()
         self.ui.pushButtonMosDirSel.clicked.connect(self.DirSel)
         self.ui.pushButtonMosMatSet.clicked.connect(self.MosMatSet)
@@ -94,6 +96,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.pushButtonOptSize.clicked.connect(self.OptSizeMos)
         #comboBox.currentIndexChanged.connect()
         self.ui.comboBoxDesignCorner.currentIndexChanged.connect(self.changeCorner)
+        #slider.valueChanged.connect()
+        self.ui.horizontalSliderGateLExt.valueChanged.connect(self.changeExtFactor) 
 
     def configPlot(self):
         # vstar as x axis
@@ -260,18 +264,22 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.ui.topLPlotL.scene().sigMouseMoved.connect(self.topMouseMovedL)
 
     def configDataLib(self):
-        # MOS Transistor
+        # MOS Transistor Model
         self.L = 0.18
         self.Lref = 0.18
         self.Lchk = 0.18
         self.mosModel = 'nch'
-        # MOS Transistor
+        # MOS Transistor Basic
         self.W = 10.0
         self.GmId = 10.0
         self.Gm = 10.0
         self.Id = 1.0
         self.VDS = 0.9
         self.VSB = 0.1
+        # MOS Transistor Extension
+        self.Lext = 0.18
+        self.ExtFactor = 1
+        self.ExtEn = 0
         # Syn MOS Transistor
         self.synW = 10.0
         self.synWFin = 0.5
@@ -321,6 +329,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.visCorner = [ False, False, False, False, False]
         self.mosCorner = [None, None, None, None, None]
         self.mosDat = None
+        self.mosVar = None
         # Data
         self.listVGS = []
         self.listL = []
@@ -480,6 +489,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.optOpptReady = 0
         ## Opt Size : 0-Gm, 1-Id, 2-Area
         self.optSizeMode = 0
+        ## Self-Gain Calculation : 0-Self_Gain, 1-Gm x Rout, 2-Gm / Gds
+        self.avCalMode = 2
 
 
     def configDefault(self):
@@ -685,7 +696,30 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
             self.ui.labelLog.setText('No Check Gate Length')
         else:
             self.Lchk = float(self.gateLChkItem.text())
+            self.Lext = self.Lchk
             self.ui.labelGateLChk.setText(self.gateLChkItem.text())
+            self.ui.checkBoxGateLExt.setCheckState(0)
+
+    def GateLExtEn(self, state):
+        '''Enable the linear extension of gate length'''
+        self.gateLChkItem = self.ui.listWidgetLChk.currentItem()
+        if self.gateLChkItem == None:
+            self.ui.labelLog.setText('Set Check Gate Length First')
+        else:
+            if state == Qt.Checked:
+                self.ExtEn = 1
+                self.Lext = self.Lchk * self.ExtFactor
+                self.ui.labelGateLExt.setText('%.2f' % self.Lext)
+            else:
+                self.ExtEn = 0
+                self.Lext = self.Lchk
+                self.ui.labelGateLExt.setText('')
+
+    def changeExtFactor(self):
+        self.ExtFactor = int(self.ui.horizontalSliderGateLExt.value())
+        if self.ExtEn == 1:
+            self.Lext = self.Lchk * self.ExtFactor
+            self.ui.labelGateLExt.setText('%.2f' % self.Lext)
 
     def PlotUpdate(self):
         if self.desLSet == 0:
@@ -774,7 +808,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                     self.optPltVdsat.append(lp.lookupfz(self.mosDat, self.mosModel, 'VDSAT', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
                     self.optPltVstar.append(2.0/lp.lookupfz(self.mosDat, self.mosModel, 'GMOVERID', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
                     self.optPltFt.append(lp.lookupfz(self.mosDat, self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
-                    self.optPltAvo.append(lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
+                    #self.optPltAvo.append(lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
+                    self.optPltAvo.append(self.lookUpAv(self.mosDat, self.mosModel, self.VDS, self.VSB, optL, self.optVGS))
         # Ft as constriant
         elif self.optOpptMode == 1:
             self.optOpFt = 1000000.0*float(self.ui.lineEditOptFt.text())
@@ -787,7 +822,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                     self.optPltVdsat.append(lp.lookupfz(self.mosDat, self.mosModel, 'VDSAT', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
                     self.optPltVstar.append(2.0/lp.lookupfz(self.mosDat, self.mosModel, 'GMOVERID', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
                     self.optPltFt.append(lp.lookupfz(self.mosDat, self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
-                    self.optPltAvo.append(lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
+                    #self.optPltAvo.append(lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
+                    self.optPltAvo.append(self.lookUpAv(self.mosDat, self.mosModel, self.VDS, self.VSB, optL, self.optVGS))
         # Avo as constriant
         elif self.optOpptMode == 2:
             self.optOpAvo = float(self.ui.lineEditOptAvo.text())
@@ -800,7 +836,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                     self.optPltVdsat.append(lp.lookupfz(self.mosDat, self.mosModel, 'VDSAT', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
                     self.optPltVstar.append(2.0/lp.lookupfz(self.mosDat, self.mosModel, 'GMOVERID', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
                     self.optPltFt.append(lp.lookupfz(self.mosDat, self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
-                    self.optPltAvo.append(lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
+                    #self.optPltAvo.append(lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=optL, VGS=self.optVGS))
+                    self.optPltAvo.append(self.lookUpAv(self.mosDat, self.mosModel, self.VDS, self.VSB, optL, self.optVGS))
         # If Curve is Ready
         if len(self.optPltL) != 0:
             self.optOpptReady = 1
@@ -898,7 +935,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
             if vstarState == 1:
                 vstarReady = 1
                 vstarPltL.append(1000*swL)
-                vstarPltAv.append(lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=swL, VGS=vstarVgs))
+                #vstarPltAv.append(lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=swL, VGS=vstarVgs))
+                vstarPltAv.append(self.lookUpAv(self.mosDat, self.mosModel, self.VDS, self.VSB, swL, vstarVgs))
                 vstarPltFt.append(lp.lookupfz(self.mosDat, self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=swL, VGS=vstarVgs))
         if (vstarReady == 1):
             self.curveAvDes = pg.PlotDataItem( vstarPltL, vstarPltAv, pen = self.pen, symbolBrush = (255,0,0), symbolPen='w', clear = True)
@@ -932,8 +970,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.synVGS, self.synState = self.SearchVGSG( self.tgtCorner, self.synGmId, self.Lchk, 4)
         self.synW =  self.synId * self.W / lp.lookupfz(self.mosDat, self.mosModel, 'ID', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=self.synVGS)
         self.synWFin = self.synW / (self.synMulti * self.synFin)
-        self.ui.labelSynW.setText(self.sciPrint(0.000001 * self.synW, 'm'))
-        self.ui.labelSynWFin.setText(self.sciPrint(0.000001 * self.synWFin, 'm'))
+        self.ui.labelSynW.setText(self.sciPrint(0.000001 * self.synW * self.Lext / self.Lchk, 'm'))
+        self.ui.labelSynWFin.setText(self.sciPrint(0.000001 * self.synWFin * self.Lext / self.Lchk, 'm'))
         self.ui.labelSynVgs.setText(self.sciPrint(self.synVGS, 'V'))
         self.ui.labelChkId.setText(self.sciPrint(self.synId, 'A'))
         self.ui.labelChkGm.setText(self.sciPrint(self.synGm, 'S/A'))
@@ -941,15 +979,18 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
 
     def ChkMos(self, chkW, chkVgs):
         '''Scale the Char of MOS and Change the label'''
-        mosScale = chkW / self.W
-        chkCgg = mosScale * lp.lookupfz(self.mosDat, self.mosModel, 'CGG', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs)
+        widthScale = chkW / self.W
+        lengthScale = self.Lext / self.Lchk
+        areaScale = lengthScale * lengthScale
+        chkCgg = widthScale * lp.lookupfz(self.mosDat, self.mosModel, 'CGG', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs) * areaScale
         self.ui.labelChkCgg.setText(self.sciPrint(chkCgg, 'F'))
         #print ("Cgg : %1.24f" % chkCgg)
-        chkFt = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs)
+        chkFt = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs) / areaScale
         self.ui.labelChkFt.setText(self.sciPrint(chkFt, 'Hz'))
-        chkRout = 1.0 / ( mosScale * lp.lookupfz(self.mosDat, self.mosModel, 'GDS', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs))
+        chkRout = 1.0 / ( widthScale * lp.lookupfz(self.mosDat, self.mosModel, 'GDS', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs)) * lengthScale
         self.ui.labelChkRout.setText(self.sciPrint(chkRout, 'Ohm'))
-        chkAv = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs)
+        #chkAv = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs) * lengthScale
+        chkAv = 1.0 * self.lookUpAv(self.mosDat, self.mosModel, self.VDS, self.VSB, self.Lchk, chkVgs) * lengthScale
         self.ui.labelChkAv.setText(self.sciPrint(chkAv, 'V/V'))
         chkVth = 1.0 * lp.lookupfz(self.mosDat, self.mosModel, 'VT', VDS=self.VDS, VSB=self.VSB, L=self.Lchk, VGS=chkVgs)
         self.ui.labelChkVth.setText(self.sciPrint(chkVth, 'V'))
@@ -987,7 +1028,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         searchState = 1
         for i in range(4):
             vgsSeq = np.arange( vgsEnd, vgsStart, -vgsStep[i])
-            avoSeq = lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=tgtL, VGS=vgsSeq)
+            #avoSeq = lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=tgtL, VGS=vgsSeq)
+            avoSeq = self.lookUpAv(self.mosDat, self.mosModel, self.VDS, self.VSB, tgtL, vgsSeq)
             vgsLeft = np.searchsorted( avoSeq, tgtAvo, 'left')
             if vgsLeft == vgsSeq.size:
                 searchState = 2
@@ -1025,6 +1067,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         '''Load the MAT File and Set the Voltage as Bias'''
         print ('Load Mat File : %s' % self.matItem.text())
         self.mosDat = h5py.File(self.matFilePath, 'r')
+        self.mosVar = list(self.mosDat.keys())
         print ("Loading complete!")
         self.ui.listWidgetL.clear()
         self.ui.listWidgetLRef.clear()
@@ -1042,6 +1085,20 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         # TODO Set the VDS
         self.W = self.mosDat['W'][0][0]*self.mosDat['NFING'][0][0]
         print ('Mos Default Width : %2.2f' % self.W)
+        self.checkMat()
+
+    def checkMat(self):
+        '''Check the variables stored in the mos dat'''
+        # Self-Gain
+        if ('SELF_GAIN' in self.mosVar):
+            self.avCalMode = 0
+            print ('Mos Avo = Self_Gain')
+        #elif ('ROUT' in self.mosVar):
+        #    self.avCalMode = 1
+        #    print ('Mos Avo = Gm x Rout')
+        else:
+            self.avCalMode = 2
+            print ('Mos Avo = Gm / Gds')
 
     def cornerMat(self):
         '''Search & Load all the corner Matlib Data'''
@@ -1258,7 +1315,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
             self.ui.botLPlotId.removeItem(self.pltCurveAvIDes)
             self.ui.botRPlotId.removeItem(self.pltCurveFtIDes)
         self.listId = lp.lookupfz(self.mosDat, self.mosModel, 'ID', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
-        self.listAv = lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
+        #self.listAv = lp.lookupfz(self.mosDat, self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
+        self.listAv = self.lookUpAv(self.mosDat, self.mosModel, self.VDS, self.VSB, self.L, self.listVGS)
         self.listFt = lp.lookupfz(self.mosDat, self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
         self.listGmId = lp.lookupfz(self.mosDat, self.mosModel, 'GMOVERID', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
         self.listVdsat = lp.lookupfz(self.mosDat, self.mosModel, 'VDSAT', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
@@ -1381,12 +1439,14 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
             if w1State == 1:
                 self.w1LReady[cornerIndex] = 1
                 w1PltL.append(1000*swL)
-                w1PltAv.append(lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=swL, VGS=w1Vgs))
+                #w1PltAv.append(lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=swL, VGS=w1Vgs))
+                w1PltAv.append(self.lookUpAv(self.mosCorner[cornerIndex], self.mosModel, self.VDS, self.VSB, swL, w1Vgs))
                 w1PltFt.append(lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=swL, VGS=w1Vgs))
             if s0State == 1:
                 self.s0LReady[cornerIndex] = 1
                 s0PltL.append(1000*swL)
-                s0PltAv.append(lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=swL, VGS=s0Vgs))
+                #s0PltAv.append(lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=swL, VGS=s0Vgs))
+                s0PltAv.append(self.lookUpAv(self.mosCorner[cornerIndex], self.mosModel, self.VDS, self.VSB, swL, s0Vgs))
                 s0PltFt.append(lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=swL, VGS=s0Vgs))
         # Add Curve
         if (self.w1LReady[cornerIndex] == 1):
@@ -1401,7 +1461,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         listId = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'ID', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
         listGmOverId = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'GMOVERID', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
         listFt = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
-        listAv = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
+        #listAv = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.L, VGS=self.listVGS)
+        listAv = self.lookUpAv(self.mosCorner[cornerIndex], self.mosModel, self.VDS, self.VSB, self.L, self.listVGS)
         ## Vgs Curve
         self.corCurveIdDDes[cornerIndex] = pg.PlotDataItem( self.listVGS, listId, pen = self.cornerPen[cornerIndex], clear=True)
         self.corCurveFtDDes[cornerIndex] = pg.PlotDataItem( self.listVGS, listFt, pen = self.cornerPen[cornerIndex], clear=True)
@@ -1454,7 +1515,8 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         listId = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'ID', VDS=self.VDS, VSB=self.VSB, L=self.Lref, VGS=self.listVGS)
         listGmOverId = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'GMOVERID', VDS=self.VDS, VSB=self.VSB, L=self.Lref, VGS=self.listVGS)
         listFt = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'FUG', VDS=self.VDS, VSB=self.VSB, L=self.Lref, VGS=self.listVGS)
-        listAv = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.Lref, VGS=self.listVGS)
+        #listAv = lp.lookupfz(self.mosCorner[cornerIndex], self.mosModel, 'SELF_GAIN', VDS=self.VDS, VSB=self.VSB, L=self.Lref, VGS=self.listVGS)
+        listAv = self.lookUpAv(self.mosCorner[cornerIndex], self.mosModel, self.VDS, self.VSB, self.Lref, self.listVGS)
         ## Vgs Curve
         self.corCurveIdDRef[cornerIndex] = pg.PlotDataItem( self.listVGS, listId, pen = self.refPen, clear=True)
         self.corCurveFtDRef[cornerIndex] = pg.PlotDataItem( self.listVGS, listFt, pen = self.refPen, clear=True)
@@ -1500,6 +1562,19 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
         self.corCurveFtIRef[cornerIndex] = pg.PlotDataItem( pltIdI, pltFtI, pen = self.refPen, clear=True)
         self.corCurveAvIRef[cornerIndex] = pg.PlotDataItem( pltIdI, pltAvI, pen = self.refPen, clear=True)
         self.corCurveFomIRef[cornerIndex]= pg.PlotDataItem(pltIdI, pltFtI*pltGmI, pen = self.refPen, clear=True)
+
+    def lookUpAv(self, mosDat, mosModel, chkVds, chkVsb, chkL, chkVgs):
+        '''Return Self-Gain Based on data state'''
+        avResult = 0
+        if self.avCalMode == 0:
+            avResult = lp.lookupfz(mosDat, mosModel, 'SELF_GAIN', VDS=chkVds, VSB=chkVsb, L=chkL, VGS=chkVgs)
+        elif self.avCalMode == 2:
+            try:
+                len(chkVgs) > 1
+                avResult = [gm/gds for gm, gds in zip(lp.lookupfz(mosDat, mosModel, 'GM', VDS=chkVds, VSB=chkVsb, L=chkL, VGS=chkVgs), lp.lookupfz(mosDat, mosModel, 'GDS', VDS=chkVds, VSB=chkVsb, L=chkL, VGS=chkVgs))]
+            except:
+                avResult = lp.lookupfz(mosDat, mosModel, 'GM', VDS=chkVds, VSB=chkVsb, L=chkL, VGS=chkVgs) / lp.lookupfz(mosDat, mosModel, 'GDS', VDS=chkVds, VSB=chkVsb, L=chkL, VGS=chkVgs)
+        return avResult
 
     def visibleRef(self, curveState):
         ''' TurnOff the Ref Curve'''

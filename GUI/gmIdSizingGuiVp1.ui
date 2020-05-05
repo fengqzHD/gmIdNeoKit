@@ -31,7 +31,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Gm Id Sizing Box V0.2</string>
+           <string>Gm Id Sizing Box V0.3</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -1372,7 +1372,7 @@ border: 15 px solid rgb(0, 0, 0);
             </property>
             <layout class="QGridLayout" name="gridLayout_10">
              <item row="0" column="0">
-              <layout class="QVBoxLayout" name="verticalLayout_17" stretch="1,1,8,1,6">
+              <layout class="QVBoxLayout" name="verticalLayout_17" stretch="1,1,1,7,1,6">
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_39" stretch="1,1">
                  <item>
@@ -1519,6 +1519,80 @@ border: 15 px solid rgb(0, 0, 0);
                     </widget>
                    </item>
                   </layout>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="1,1,2">
+                 <item>
+                  <widget class="QCheckBox" name="checkBoxGateLExt">
+                   <property name="font">
+                    <font>
+                     <weight>75</weight>
+                     <italic>false</italic>
+                     <bold>true</bold>
+                     <underline>false</underline>
+                     <strikeout>false</strikeout>
+                    </font>
+                   </property>
+                   <property name="layoutDirection">
+                    <enum>Qt::LeftToRight</enum>
+                   </property>
+                   <property name="autoFillBackground">
+                    <bool>false</bool>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">*{
+color: rgb(255, 0, 0);
+}</string>
+                   </property>
+                   <property name="text">
+                    <string>LExt :</string>
+                   </property>
+                   <property name="autoRepeat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="labelGateLExt">
+                   <property name="font">
+                    <font>
+                     <weight>75</weight>
+                     <italic>true</italic>
+                     <bold>true</bold>
+                     <underline>false</underline>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">*{
+color: rgb(255, 0, 0);
+border: 15 px solid rgb(0, 0, 0);
+}</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSlider" name="horizontalSliderGateLExt">
+                   <property name="minimum">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <number>10</number>
+                   </property>
+                   <property name="value">
+                    <number>2</number>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </item>
