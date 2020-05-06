@@ -1,0 +1,35 @@
+// Generated for: spectre
+// Generated on: May  3 20:26:28 2020
+// Design library name: mosChar
+// Design cell name: techChar_nmos2v
+// Design view name: schematic
+simulator lang=spectre
+global 0
+parameters ds=0.9 gs=0.9 sb=0
+include "/tech/tsmc/tsmc180/tsmc180_rhuq_MEA/tsmc180/models/spectre/cmn018_assp_v1d3.scs" section=tt
+
+// Library name: mosChar
+// Cell name: techChar_nmos2v
+// View name: schematic
+MN (vdn vgn vx vbn) nch l=180.0n w=10u m=1 nf=2 sd=540.0n ad=2.7e-12 \
+        as=4.8e-12 pd=11.08u ps=21.92u nrd=0.027 nrs=0.027 sa=480.0n \
+        sb=480.0n sca=0 scb=0 scc=0
+VNOI (vx 0) vsource dc=0 type=dc
+VBSN (vbn 0) vsource dc=-sb type=dc
+VDSN (vdn 0) vsource dc=ds type=dc
+VGSN (vgn 0) vsource dc=gs type=dc
+simulatorOptions options psfversion="1.1.0" reltol=1e-3 vabstol=1e-6 \
+    iabstol=1e-12 temp=27 tnom=27 scalem=1.0 scale=1.0 gmin=1e-12 rforce=1 \
+    maxnotes=5 maxwarns=5 digits=5 cols=80 pivrel=1e-3 \
+    sensfile="../psf/sens.output" checklimitdest=psf 
+dcOp dc write="spectre.dc" maxiters=150 maxsteps=10000 annotate=status
+dcOpInfo info what=oppoint where=rawfile
+dc dc param=gs start=0 stop=1.8 step=10m oppoint=rawfile maxiters=150 \
+    maxsteps=10000 annotate=status
+modelParameter info what=models where=rawfile
+element info what=inst where=rawfile
+outputParameter info what=output where=rawfile
+designParamVals info what=parameters where=rawfile
+primitives info what=primitives where=rawfile
+subckts info what=subckts where=rawfile
+saveOptions options save=allpub
