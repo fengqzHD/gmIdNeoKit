@@ -659,6 +659,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.ui.titleToolBox.setStyleSheet("*{\n"
                                                    "background-color:rgb(102, 255, 102);\n"
                                                     "}")
+                self.ui.titleBiasVbs.setText('Vsbn (mV):')
             else:
                 self.ui.labelDevType.setStyleSheet("*{\n"
                                                    "background-color:rgb(255, 102, 255);\n"
@@ -666,6 +667,7 @@ class gmIdGUIWindow(QtWidgets.QMainWindow):
                 self.ui.titleToolBox.setStyleSheet("*{\n"
                                                    "background-color:rgb(255, 102, 255);\n"
                                                     "}")
+                self.ui.titleBiasVbs.setText('Vbsp (mV):')
             self.loadMat()
 
     def GateLSet(self):
